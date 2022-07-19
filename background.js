@@ -16,7 +16,7 @@ function onCompletedListener(details) {
 const debouncedOnCompleted = debounce(onCompletedListener, 250)
 
 
-chrome.webRequest.onCompleted.addListener(debouncedOnCompleted, { urls: ["https://*.amazon.com/*"] });
+chrome.webRequest.onCompleted.addListener(debouncedOnCompleted, { urls: ["https://*.console.aws.amazon.com/*"] });
 
 /**
  * Originally inspired by  David Walsh (https://davidwalsh.name/javascript-debounce-function)
