@@ -1,15 +1,26 @@
 {
-    "name": "My extension",
-    "version": "1.0",
-    "manifest_version": 3,
-    "content_scripts": [
-        {
-            "matches": ["*://*.console.aws.amazon.com/*"],
-            "js": ["contentScript.js"],
-            "run_at": "document_idle"
-        }
-    ],
-    "permissions": ["webRequest", "tabs"],
-    "background": { "service_worker": "./background.js" },
-    "host_permissions": ["https://*.amazon.com/*"]
+  "name": "AWS console autofill delete",
+  "description": "Automatically fill the confirmation message to delete a resource in AWS console",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": "logo.png",
+    "default_title": "AWS console autofill delete"
+  },
+  "permissions": ["webRequest", "tabs"],
+  "host_permissions": ["https://*.console.aws.amazon.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.console.aws.amazon.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": { "service_worker": "./background.js" },
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+  "author": "Mickael Bourgois"
 }
