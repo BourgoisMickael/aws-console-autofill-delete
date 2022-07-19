@@ -1,0 +1,15 @@
+{
+    "name": "My extension",
+    "version": "1.0",
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": ["*://*.console.aws.amazon.com/*"],
+            "js": ["contentScript.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "permissions": ["webRequest", "tabs"],
+    "background": { "service_worker": "./background.js" },
+    "host_permissions": ["https://*.amazon.com/*"]
+}
