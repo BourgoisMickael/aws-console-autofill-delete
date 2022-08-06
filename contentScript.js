@@ -23,6 +23,9 @@ const queries = {
         "#app #DELETE_POLICY_MODAL input[placeholder]",
         "#app #DELETE_IDP_MODAL input[placeholder]",
     ],
+    IAM: [
+        '.delete-access-key-section input[placeholder]'
+    ],
     DYNAMODBV2: [
         "div[data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]",
         "input[placeholder=delete]",
