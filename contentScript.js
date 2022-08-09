@@ -86,9 +86,10 @@ observer.observe(document, {
     characterData: true
 });
 
-chrome.runtime.onMessage.addListener(function messageListener(request, _sender, _sendResponse) {
+chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
     console.debug('onMessage', request)
     debouncedQueryFill();
+    sendResponse(1)
 })
 
 /**

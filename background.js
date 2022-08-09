@@ -1,20 +1,17 @@
-console.debug('running background.js')
-
 function onCompletedListener(details) {
     if (details.type === 'image' || details.type === 'ping' || !details.url.includes('console.aws.amazon.com')) return
     console.debug('REQ', details.type, details.url,  details)
 
-    chrome.tabs.query({active: true, currentWindow: true}, function tabCb(tabs){
+    chrome.tabs.query({active: true, currentWindow: true }, function tabCb(tabs){
         if (tabs?.[0]?.id ?? false) {
-            chrome.tabs.sendMessage(tabs[0].id, 'REQUEST');
-        } else {
-            console.warn(tabs)
+            chrome.tabs.sendMessage(tabs[0].id, 'REQUEST', null, res => {
+                res || console.debug('sendMessage response', chrome.runtime.lastError)
+            });
         }
     });
 }
 
 const debouncedOnCompleted = debounce(onCompletedListener, 250)
-
 
 chrome.webRequest.onCompleted.addListener(debouncedOnCompleted, { urls: ["https://*.console.aws.amazon.com/*"] });
 
