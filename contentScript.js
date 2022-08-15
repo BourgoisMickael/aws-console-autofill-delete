@@ -41,7 +41,10 @@ const queries = {
         // [data-testid=confirm-delete-group-modal]
     ],
     VPC: ["[data-id=confirmation-modal-input] input[placeholder]"],
-    ATHENA: ["div[data-testid=confirm-with-friction-modal]  div[data-testid=modal-friction-word] input[placeholder]"]
+    ATHENA: ["div[data-testid=confirm-with-friction-modal]  div[data-testid=modal-friction-word] input[placeholder]"],
+    SINGLESIGNON: [
+        "#delete-group-modal input[placeholder]"
+    ]
 };
 
 async function queryFill(service) {
