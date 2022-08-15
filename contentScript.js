@@ -34,6 +34,7 @@ const queries = {
     ],
     COGNITO: [
         "div[data-testid=additional-confirmation-section] input[placeholder]",
+        ".columbia-modal input[type='text'][id*='textfield']"
         // this should work for all modals like
         // [data-testid=cognito-domain-delete-modal]
         // [data-testid=delete-user-modal]
@@ -50,7 +51,7 @@ async function queryFill(service) {
             const elem = document.querySelector(q);
             if (elem) {
                 console.debug("Found", elem, elem.disabled);
-                !elem.disabled && autofill(elem, elem.placeholder);
+                !elem.disabled && autofill(elem, elem.placeholder || 'delete');
             }
 
             // Check for iframe (like VPC)
@@ -59,7 +60,7 @@ async function queryFill(service) {
                 const elem = iframe.contentWindow.document.querySelector(q)
                 if (elem) {
                     console.debug("Found", elem, elem.disabled);
-                    !elem.disabled && autofill(elem, elem.placeholder);
+                    !elem.disabled && autofill(elem, elem.placeholder || 'delete');
                 }
             }
         }
