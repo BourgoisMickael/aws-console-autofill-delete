@@ -47,52 +47,53 @@ const queries = {
     ]
 };
 
-async function queryFill(service) {
+async function queryFill(service, doc) {
     const defaultQueries = service && queries[service] || ['input[placeholder*=delete]'] // contains delete
 
         for (const q of defaultQueries) {
-            const elem = document.querySelector(q);
+            const elem = doc.querySelector(q);
             if (elem) {
                 console.debug("Found", elem, elem.disabled);
                 !elem.disabled && autofill(elem, elem.placeholder || 'delete');
-            }
-
-            // Check for iframe (like VPC)
-            const iframes = document.querySelectorAll('iframe')
-            for (const iframe of iframes) {
-                const elem = iframe.contentWindow.document.querySelector(q)
-                if (elem) {
-                    console.debug("Found", elem, elem.disabled);
-                    !elem.disabled && autofill(elem, elem.placeholder || 'delete');
-                }
             }
         }
 }
 
 const debouncedQueryFill = debounce(queryFill, 250);
-
-const observer = new MutationObserver(function (mutations, observer) {
+/** Define what element should be observed by the observer and what types of mutations trigger the callback */
+const observerConfig = {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true
+}
+const observer = new MutationObserver(function (_mutations, _observer) {
     const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+
+    // check for iframes like for VPC pages
+    const iframes = document.querySelectorAll('iframe')
+    for (const iframe of iframes) {
+        const iframeDocument = iframe.contentWindow.document;
+        const iframeObserver = new MutationObserver(function (_iframeMutation, _iframeObs) {
+            if (service) debouncedQueryFill(service, iframeDocument)
+        })
+        iframeObserver.observe(iframeDocument, observerConfig)
+    }
 
     if (!service) {
         throw new Error("Failing parsing window.location to detect service");
     }
 
-    debouncedQueryFill(service);
+    debouncedQueryFill(service, document);
 });
 
-// define what element should be observed by the observer
-// and what types of mutations trigger the callback
-observer.observe(document, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    characterData: true
-});
+observer.observe(document, observerConfig);
 
 chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
-    console.debug('onMessage', request)
-    debouncedQueryFill();
+    const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+
+    console.debug('onMessage', request, service)
+    debouncedQueryFill(service);
     sendResponse(1)
 })
 
