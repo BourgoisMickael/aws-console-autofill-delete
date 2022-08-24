@@ -41,20 +41,24 @@ const queries = {
         // [data-testid=confirm-delete-group-modal]
     ],
     VPC: ["[data-id=confirmation-modal-input] input[placeholder]"],
-    ATHENA: ["div[data-testid=confirm-with-friction-modal]  div[data-testid=modal-friction-word] input[placeholder]"],
+    ATHENA: ["div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]"],
     SINGLESIGNON: [
         "#delete-group-modal input[placeholder]"
-    ]
+    ],
+    DOCDB: [{
+        inputQuery: "[class^=awsui_dialog]>[class^=awsui_container]>[class^=awsui_content]>[class^=awsui_root]>[class^=awsui_child]:last-child input[id^=formField]",
+        valueQuery: "[class^=awsui_dialog]>[class^=awsui_container]>[class^=awsui_content]>[class^=awsui_root]>[class^=awsui_child]:last-child strong"
+    }]
 };
 
 async function queryFill(service, doc) {
     const defaultQueries = service && queries[service] || ['input[placeholder*=delete]'] // contains delete
 
         for (const q of defaultQueries) {
-            const elem = doc.querySelector(q);
+            const elem = doc.querySelector(typeof q === 'object' ? q.inputQuery : q);
             if (elem) {
-                console.debug("Found", elem, elem.disabled);
-                !elem.disabled && autofill(elem, elem.placeholder || 'delete');
+                console.debug("Found", elem, elem.disabled, doc.querySelector(q.valueQuery));
+                !elem.disabled && autofill(elem, typeof q === 'object' && q.valueQuery && doc.querySelector(q.valueQuery)?.innerText || elem.placeholder || 'delete');
             }
         }
 }
