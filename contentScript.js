@@ -87,7 +87,13 @@ const observer = new MutationObserver(function (_mutations, _observer) {
     const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
 
     // check for iframes like for VPC pages
-    const iframes = document.querySelectorAll('iframe')
+    let iframes;
+    try {
+        iframes = document.querySelectorAll('iframe')
+    } catch (e) { // catch security exception blocking cross-origin iframes
+        console.warn('Caught error', e)
+        return;
+    }
     for (const iframe of iframes) {
         const iframeDocument = iframe.contentWindow.document;
         const iframeObserver = new MutationObserver(function (_iframeMutation, _iframeObs) {
