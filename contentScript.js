@@ -29,7 +29,7 @@ const queries = {
     ],
     DYNAMODBV2: [
         "div[data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]",
-        "input[placeholder=delete]",
+        ".awsui-modal-body input[placeholder]"
         // Nothing else for index or replica / global table
         // For the last one no mutation is triggered so quickly press refresh then delete button to fill...
     ],
@@ -60,7 +60,7 @@ const queries = {
 };
 
 async function queryFill(service, doc) {
-    const defaultQueries = service && queries[service] || ['input[placeholder]'] // contains delete
+    const defaultQueries = service && queries[service] || []
 
         for (const q of defaultQueries) {
             if (typeof q === 'object' && q.function) {
