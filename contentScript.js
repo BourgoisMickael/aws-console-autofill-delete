@@ -1,6 +1,7 @@
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 function autofill(elem, data) {
+    if (!elem) return
     if (elem.value === data) return;
     // let lastFocus = document.activeElement; // nothing to do with previous focus
     elem.focus();
@@ -46,19 +47,30 @@ const queries = {
         "#delete-group-modal input[placeholder]"
     ],
     DOCDB: [{
-        inputQuery: "[class^=awsui_dialog]>[class^=awsui_container]>[class^=awsui_content]>[class^=awsui_root]>[class^=awsui_child]:last-child input[id^=formField]",
-        valueQuery: "[class^=awsui_dialog]>[class^=awsui_container]>[class^=awsui_content]>[class^=awsui_root]>[class^=awsui_child]:last-child strong"
+        function: function docdb(doc) {
+            const base = "[class^=awsui_dialog]>[class^=awsui_container]>[class^=awsui_content]>[class^=awsui_root]>[class^=awsui_child]"
+            const instanceText = doc.querySelector(base + ">[class^=awsui_root]>[class^=awsui_child]:last-child strong")
+            const instanceElem = doc.querySelector(base + ">[class^=awsui_root]>[class^=awsui_child]:last-child input")
+            const clusterText = doc.querySelector(base + ":last-child strong")
+            const clusterElem = doc.querySelector(base + ":last-child input")
+            if (instanceText && instanceElem) instanceElem && !instanceElem.disabled && autofill(instanceElem, instanceText.innerText)
+            else clusterElem && !clusterElem.disabled && autofill(clusterElem, clusterText.innerText);
+        }
     }]
 };
 
 async function queryFill(service, doc) {
-    const defaultQueries = service && queries[service] || ['input[placeholder*=delete]'] // contains delete
+    const defaultQueries = service && queries[service] || ['input[placeholder]'] // contains delete
 
         for (const q of defaultQueries) {
-            const elem = doc.querySelector(typeof q === 'object' ? q.inputQuery : q);
-            if (elem) {
-                console.debug("Found", elem, elem.disabled, doc.querySelector(q.valueQuery));
-                !elem.disabled && autofill(elem, typeof q === 'object' && q.valueQuery && doc.querySelector(q.valueQuery)?.innerText || elem.placeholder || 'delete');
+            if (typeof q === 'object' && q.function) {
+                q.function(doc)
+            } else {
+                const elem = doc.querySelector(q);
+                if (elem) {
+                    console.debug("Found", elem, elem.disabled);
+                    !elem.disabled && autofill(elem, elem.placeholder);
+                }
             }
         }
 }
@@ -97,7 +109,7 @@ chrome.runtime.onMessage.addListener(function messageListener(request, _sender, 
     const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
 
     console.debug('onMessage', request, service)
-    debouncedQueryFill(service);
+    debouncedQueryFill(service, document);
     sendResponse(1)
 })
 
