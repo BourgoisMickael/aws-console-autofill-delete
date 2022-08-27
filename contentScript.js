@@ -81,6 +81,13 @@ const queries = {
                 || doc.querySelector(".awsui-modal-body input[placeholder]")
             defaultElem && autofill(defaultElem, defaultElem.placeholder)
         }
+    }],
+    APIGATEWAY: [{
+        function: function apigateway(doc) {
+            const elem = doc.querySelector(".modal-content .modal-body input[ng-model=apiNameConfirm]")
+            const text = doc.querySelector(".modal-content .modal-body .modal-warning-message [translate='API.DELETE_CONFIRMATION_TEXT']>strong")?.innerText
+            elem && text && autofill(elem, text)
+        }
     }]
 };
 
