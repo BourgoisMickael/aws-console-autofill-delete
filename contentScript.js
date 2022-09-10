@@ -88,7 +88,10 @@ const queries = {
             const text = doc.querySelector(".modal-content .modal-body .modal-warning-message [translate='API.DELETE_CONFIRMATION_TEXT']>strong")?.innerText
             elem && text && autofill(elem, text)
         }
-    }]
+    }],
+    WAFV2: [
+        '.awsui-modal-body .awsui-form-field .awsui-form-field-control input[placeholder]'
+    ]
 };
 
 async function queryFill(service, doc) {
