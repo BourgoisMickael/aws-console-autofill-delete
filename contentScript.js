@@ -103,8 +103,9 @@ async function queryFill(service, doc) {
             } else {
                 const elem = doc.querySelector(q);
                 if (elem) {
-                    console.debug("Found", elem, elem.disabled);
-                    !elem.disabled && autofill(elem, elem.placeholder);
+                    const value = !elem.disabled && elem.placeholder || (service === 'COGNITO' ? 'delete' : undefined);
+                    console.debug("Found", elem, elem.disabled, value);
+                    if (value) autofill(elem, value)
                 }
             }
         }
