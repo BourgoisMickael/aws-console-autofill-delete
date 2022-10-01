@@ -91,7 +91,8 @@ const queries = {
     }],
     WAFV2: [
         '.awsui-modal-body .awsui-form-field .awsui-form-field-control input[placeholder]'
-    ]
+    ],
+    LAMBDA: ['#function-list-delete-modal input[placeholder]']
 };
 
 async function queryFill(service, doc) {
@@ -104,7 +105,7 @@ async function queryFill(service, doc) {
                 const elem = doc.querySelector(q);
                 if (elem) {
                     const value = !elem.disabled && elem.placeholder || (service === 'COGNITO' ? 'delete' : undefined);
-                    console.debug("Found", elem, elem.disabled, value);
+                    // console.debug("Found", elem, elem.disabled, value);
                     if (value) autofill(elem, value)
                 }
             }
