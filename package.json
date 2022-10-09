@@ -1,0 +1,22 @@
+{
+  "name": "aws-console-autofill-delete",
+  "version": "1.0.0",
+  "description": "Extension to autofill delete confirmation on aws console",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BourgoisMickael/aws-console-autofill-delete.git"
+  },
+  "author": "Mickael Bourgois",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BourgoisMickael/aws-console-autofill-delete/issues"
+  },
+  "homepage": "https://github.com/BourgoisMickael/aws-console-autofill-delete#readme",
+  "devDependencies": {
+    "@cypress/chrome-recorder": "^2.2.0",
+    "cypress": "^10.10.0"
+  }
+}
