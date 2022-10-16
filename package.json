@@ -16,7 +16,6 @@
   },
   "homepage": "https://github.com/BourgoisMickael/aws-console-autofill-delete#readme",
   "devDependencies": {
-    "@cypress/chrome-recorder": "^2.2.0",
     "cypress": "^10.10.0"
   }
 }
