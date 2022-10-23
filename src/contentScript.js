@@ -120,8 +120,14 @@ const observerConfig = {
     attributes: true,
     characterData: true
 }
+
+const isCypressTest = ()  =>  window.location.href.endsWith('__/#/specs/runner?file=cypress/e2e/aws.cy.js')
+const getService = () => isCypressTest()
+    ? document.querySelector("input[data-cy=aut-url-input]")?.value?.split?.('/')?.[3]?.toUpperCase?.()
+    : window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+
 const observer = new MutationObserver(function (_mutations, _observer) {
-    const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+    const service = getService()
 
     // check for iframes like for VPC pages
     let iframes;
@@ -149,7 +155,7 @@ const observer = new MutationObserver(function (_mutations, _observer) {
 observer.observe(document, observerConfig);
 
 chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
-    const service = window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+    const service = getService()
 
     console.debug('onMessage', request, service)
     debouncedQueryFill(service, document);
