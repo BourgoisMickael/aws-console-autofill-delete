@@ -1,0 +1,144 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  Queue:
+    Type: AWS::SQS::Queue
+
+  Topic:
+    Type: AWS::SNS::Topic
+
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: autofill-delete-test-user
+
+  IAMAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref IAMUser
+
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: autofill-delete-test-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Ref AWS::AccountId
+
+  IAMPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: autofill-delete-test-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: "*"
+
+  DynamoTable:
+    Type: AWS::Serverless::SimpleTable
+
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      Handler: index.handler
+      InlineCode: autofill-delete-test-lambda
+
+  EventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: default
+      EventPattern:
+        source:
+          - autofill-delete-test-rule
+      State: "DISABLED"
+
+  EventArchive:
+    Type: AWS::Events::Archive
+    Properties:
+      ArchiveName: autofill-delete-test-archive
+      SourceArn: !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
+
+  EventConnection:
+    Type: AWS::Events::Connection
+    Properties:
+      Name: autofill-delete-test-connection
+      AuthorizationType: API_KEY
+      AuthParameters:
+        ApiKeyAuthParameters:
+          ApiKeyName: autofill-delete-test-apikey
+          ApiKeyValue: autofill-delete-test-value
+
+  EventApiDestination:
+    Type: AWS::Events::ApiDestination
+    Properties:
+      Name: autofill-delete-test-apidestination
+      ConnectionArn: !GetAtt EventConnection.Arn
+      HttpMethod: GET
+      InvocationEndpoint: https://example.com
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: autofill-delete-test-pool
+      LambdaConfig: 
+        CustomMessage: !GetAtt Lambda.Arn
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: autofill-delete-test-client
+      UserPoolId: !Ref UserPool
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: autofill-delete-test-domain
+      UserPoolId: !Ref UserPool
+
+  UserPoolIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      UserPoolId: !Ref UserPool
+      ProviderName: LoginWithAmazon
+      ProviderType: LoginWithAmazon
+      ProviderDetails:
+        client_id: autofill-delete
+        client_secret: autofill-delete
+        authorize_scopes: autofill-delete
+      AttributeMapping:
+        username: user_id
+
+  UserPoolGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: autofill-delete-test-group
+      UserPoolId: !Ref UserPool
+
+  UserPoolUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      MessageAction: SUPPRESS
+      Username: autofill-delete-test-user
+      UserPoolId: !Ref UserPool
+
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: autofill-delete-test-api
