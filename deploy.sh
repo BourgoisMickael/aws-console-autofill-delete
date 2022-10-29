@@ -5,4 +5,4 @@ sam deploy \
     --template-file test-stack.yml \
     --no-fail-on-empty-changeset \
     --stack-name autofill-delete-test-stack \
-    --capabilities CAPABILITY_NAMED_IAM \
+    --capabilities CAPABILITY_NAMED_IAM
