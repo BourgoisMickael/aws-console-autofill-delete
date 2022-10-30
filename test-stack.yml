@@ -50,8 +50,29 @@ Resources:
             Action: sts:AssumeRole
             Resource: "*"
 
-  DynamoTable:
-    Type: AWS::Serverless::SimpleTable
+  DynamoGlobalTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: autofill-delete-test-globaltable
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: GSI
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+          Projection: 
+            ProjectionType: ALL
+      Replicas:
+        - Region: eu-west-3
+        - Region: eu-west-2
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
 
   Lambda:
     Type: AWS::Serverless::Function
