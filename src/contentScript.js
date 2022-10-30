@@ -130,6 +130,7 @@ const observer = new MutationObserver(function (_mutations, _observer) {
     const service = getService()
 
     // check for iframes like for VPC pages
+    /*
     let iframes;
     try {
         iframes = document.querySelectorAll('iframe')
@@ -144,6 +145,7 @@ const observer = new MutationObserver(function (_mutations, _observer) {
         })
         iframeObserver.observe(iframeDocument, observerConfig)
     }
+    */
 
     if (!service) {
         throw new Error("Failing parsing window.location to detect service");
