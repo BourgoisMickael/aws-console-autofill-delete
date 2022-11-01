@@ -10,6 +10,15 @@ function autofill(elem, data) {
     elem.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+const isCypressTest = ()  =>  window.location.href.endsWith('__/#/specs/runner?file=cypress/e2e/aws.cy.js')
+const getCypressUrl = () => document.querySelector("input[data-cy=aut-url-input]")?.value || document.querySelector("div[data-cy=aut-url]")?.innerText
+const getService = () => isCypressTest()
+    ? getCypressUrl()?.split?.('/')?.[3]?.toUpperCase?.()
+    : window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
+
+const getLocation = () => isCypressTest() ? getCypressUrl() : window.location.href;
+const getDocument = () => isCypressTest() ? document.querySelector('iframe.aut-iframe')?.contentDocument : document;
+
 const queries = {
     S3: [
         "#app .delete-objects__form .delete-objects__input__input input[placeholder]",
@@ -121,11 +130,6 @@ const observerConfig = {
     characterData: true
 }
 
-const isCypressTest = ()  =>  window.location.href.endsWith('__/#/specs/runner?file=cypress/e2e/aws.cy.js')
-const getService = () => isCypressTest()
-    ? document.querySelector("input[data-cy=aut-url-input]")?.value?.split?.('/')?.[3]?.toUpperCase?.()
-    : window.location.pathname.split?.("/")?.[1]?.toUpperCase?.();
-
 const observer = new MutationObserver(function (_mutations, _observer) {
     const service = getService()
 
@@ -147,14 +151,23 @@ const observer = new MutationObserver(function (_mutations, _observer) {
     }
     */
 
-    if (!service) {
-        throw new Error("Failing parsing window.location to detect service");
-    }
-
-    debouncedQueryFill(service, document);
+    debouncedQueryFill(service, getDocument());
 });
 
-observer.observe(document, observerConfig);
+if (isCypressTest()) {
+    const cypressObserver = new MutationObserver(function () {
+        const doc = getDocument();
+
+        if (doc && !doc.AWS_AUTOFILL_DELETE_IS_OBSERVED) {
+            console.debug('Observe new document')
+            observer.observe(doc, observerConfig);
+            doc.AWS_AUTOFILL_DELETE_IS_OBSERVED = true;
+        }
+    });
+    cypressObserver.observe(document, { attributes: true, childList: true, subtree: true })
+} else {
+    observer.observe(document, observerConfig);
+}
 
 chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
     const service = getService()
