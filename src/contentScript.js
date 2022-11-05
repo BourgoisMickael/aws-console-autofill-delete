@@ -37,10 +37,27 @@ const queries = {
         '.delete-access-key-section input[placeholder]'
     ],
     DYNAMODBV2: [
-        "div[data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]",
-        ".awsui-modal-body input[placeholder]"
-        // Nothing else for index or replica / global table
-        // For the last one no mutation is triggered so quickly press refresh then delete button to fill...
+        {
+            // delete table
+            condition: () => getLocation()?.endsWith('#tables'),
+            querySelector: "body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]",
+        },
+        {
+            // delete backup
+            condition: () => getLocation()?.endsWith('#list-backups'),
+            querySelector: "body[class*=awsui_modal-open] [data-testid=delete-backup-modal] [data-testid=input-delete-with-friction] input[placeholder]"
+        },
+        {
+            // delete index
+            condition: () => getLocation()?.includes('tab=indexes'),
+            querySelector: "body[class*=awsui-modal-open] [data-testid=polaris-app-layout] .awsui-modal-body input[placeholder]"
+
+        },
+        {
+            // delete replica (global table)
+            condition: () => getLocation()?.includes('tab=globalTables'),
+            querySelector: "body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]"
+        }
     ],
     COGNITO: [
         "div[data-testid=additional-confirmation-section] input[placeholder]",
@@ -110,6 +127,14 @@ async function queryFill(service, doc) {
         for (const q of defaultQueries) {
             if (typeof q === 'object' && q.function) {
                 q.function(doc)
+            }
+            else if (typeof q === 'object' && !q.function) {
+                const elem = q.condition() && doc.querySelector(q.querySelector)
+                if (elem) {
+                    const value = !elem.disabled && elem.placeholder || (service === 'COGNITO' ? 'delete' : undefined);
+                    // console.debug("Found", elem, elem.disabled, value);
+                    if (value) autofill(elem, value)
+                }
             } else {
                 const elem = doc.querySelector(q);
                 if (elem) {
