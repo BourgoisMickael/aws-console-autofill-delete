@@ -20,22 +20,14 @@ const getLocation = () => isCypressTest() ? getCypressUrl() : window.location.hr
 const getDocument = () => isCypressTest() ? document.querySelector('iframe.aut-iframe')?.contentDocument : document;
 
 const queries = {
-    S3: [
-        "#app .delete-objects__form .delete-objects__input__input input[placeholder]",
-        "#app .empty-bucket .empty-bucket-actions .empty-bucket-actions__input input[placeholder]",
-        "#app .delete-bucket-actions__form .delete-bucket-actions__input input[placeholder]",
-    ],
-    SQS: ["#app #purge-queue-modal input[placeholder]", "#app #delete-queue-modal input[placeholder]"],
-    SNS: ["#app .awsui-modal-body input[placeholder]"],
-    IAMV2: [
-        "#app #DELETE_USERS_MODAL input[placeholder]",
-        "#app #DELETE_ROLE_MODAL input[placeholder]",
-        "#app #DELETE_POLICY_MODAL input[placeholder]",
-        "#app #DELETE_IDP_MODAL input[placeholder]",
-    ],
-    IAM: [
-        '.delete-access-key-section input[placeholder]'
-    ],
+    APIGATEWAY: [{
+        function: function apigateway(doc) {
+            const elem = doc.querySelector(".modal-content .modal-body input[ng-model=apiNameConfirm]")
+            const text = doc.querySelector(".modal-content .modal-body .modal-warning-message [translate='API.DELETE_CONFIRMATION_TEXT']>strong")?.innerText
+            elem && text && autofill(elem, text)
+        }
+    }],
+    ATHENA: ["div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]"],
     DYNAMODBV2: [
         {
             // delete table
@@ -66,11 +58,6 @@ const queries = {
         // [data-testid=cognito-domain-delete-modal]
         // [data-testid=delete-user-modal]
         // [data-testid=confirm-delete-group-modal]
-    ],
-    VPC: ["body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]"],
-    ATHENA: ["div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]"],
-    SINGLESIGNON: [
-        "#delete-group-modal input[placeholder]"
     ],
     DOCDB: [{
         function: function docdb(doc) {
@@ -108,17 +95,30 @@ const queries = {
             defaultElem && autofill(defaultElem, defaultElem.placeholder)
         }
     }],
-    APIGATEWAY: [{
-        function: function apigateway(doc) {
-            const elem = doc.querySelector(".modal-content .modal-body input[ng-model=apiNameConfirm]")
-            const text = doc.querySelector(".modal-content .modal-body .modal-warning-message [translate='API.DELETE_CONFIRMATION_TEXT']>strong")?.innerText
-            elem && text && autofill(elem, text)
-        }
-    }],
+    IAM: [
+        '.delete-access-key-section input[placeholder]'
+    ],
+    IAMV2: [
+        "#app #DELETE_USERS_MODAL input[placeholder]",
+        "#app #DELETE_ROLE_MODAL input[placeholder]",
+        "#app #DELETE_POLICY_MODAL input[placeholder]",
+        "#app #DELETE_IDP_MODAL input[placeholder]",
+    ],
+    LAMBDA: ['#function-list-delete-modal input[placeholder]'],
+    S3: [
+        "#app .delete-objects__form .delete-objects__input__input input[placeholder]",
+        "#app .empty-bucket .empty-bucket-actions .empty-bucket-actions__input input[placeholder]",
+        "#app .delete-bucket-actions__form .delete-bucket-actions__input input[placeholder]",
+    ],
+    SINGLESIGNON: [
+        "#delete-group-modal input[placeholder]"
+    ],
+    SNS: ["#app .awsui-modal-body input[placeholder]"],
+    SQS: ["#app #purge-queue-modal input[placeholder]", "#app #delete-queue-modal input[placeholder]"],
+    VPC: ["body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]"],
     WAFV2: [
         '.awsui-modal-body .awsui-form-field .awsui-form-field-control input[placeholder]'
-    ],
-    LAMBDA: ['#function-list-delete-modal input[placeholder]']
+    ]
 };
 
 async function queryFill(service, doc) {
