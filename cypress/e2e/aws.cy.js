@@ -15,6 +15,15 @@ describe("AWS autofill delete", () => {
     // Hide cookie popup
     cy.get("#awsccc-cb-buttons > button:nth-child(2) > span").click();
 
+    // APIGATEWAY
+    cy.visit(`https://${region}.console.aws.amazon.com/apigateway/main/apis?region=${region}`);
+    cy.get('[data-testid=router] table > tbody > tr:first-child > td a').click();
+    cy.get('.resources-tree button.actions-dropdown-button').click();
+    cy.get('ul.dropdown-menu > li > a.delete-api-button').click();
+    cy.get('button#confirmDeleteApiButton').should('not.be.disabled');
+    cy.get('button.close').click();
+    // TODO custom domain name and vpc links
+
     // DYNAMODB
     // table
     cy.visit(`https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#tables`);
