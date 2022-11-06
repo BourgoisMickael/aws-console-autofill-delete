@@ -67,7 +67,7 @@ const queries = {
         // [data-testid=delete-user-modal]
         // [data-testid=confirm-delete-group-modal]
     ],
-    VPC: ["[data-id=confirmation-modal-input] input[placeholder]"],
+    VPC: ["body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]"],
     ATHENA: ["div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]"],
     SINGLESIGNON: [
         "#delete-group-modal input[placeholder]"
@@ -155,28 +155,30 @@ const observerConfig = {
     characterData: true
 }
 
+const iframes = {
+    VPC: 'iframe#networking-react-frame'
+}
+
 const observer = new MutationObserver(function (_mutations, _observer) {
     const service = getService()
 
-    // check for iframes like for VPC pages
-    /*
-    let iframes;
-    try {
-        iframes = document.querySelectorAll('iframe')
-    } catch (e) { // catch security exception blocking cross-origin iframes
-        console.warn('Caught error', e)
-        return;
-    }
-    for (const iframe of iframes) {
-        const iframeDocument = iframe.contentWindow.document;
-        const iframeObserver = new MutationObserver(function (_iframeMutation, _iframeObs) {
-            if (service) debouncedQueryFill(service, iframeDocument)
-        })
-        iframeObserver.observe(iframeDocument, observerConfig)
-    }
-    */
+    if (!service) return
+    if (!iframes[service]) return debouncedQueryFill(service, getDocument())
 
-    debouncedQueryFill(service, getDocument());
+    let iframe
+    try {
+        iframe = document.querySelector(iframes[service])
+    } catch (e) {// catch security exception like cors
+        console.warn('Caught error', e)
+        return
+    }
+
+    if (iframe && iframe.contentDocument) {
+        const iframeObserver = new MutationObserver(function () {
+            debouncedQueryFill(service, iframe.contentDocument)
+        })
+        iframeObserver.observe(iframe.contentDocument, observerConfig)
+    }
 });
 
 if (isCypressTest()) {
@@ -194,6 +196,7 @@ if (isCypressTest()) {
     observer.observe(document, observerConfig);
 }
 
+/*
 chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
     const service = getService()
 
@@ -201,6 +204,7 @@ chrome.runtime.onMessage.addListener(function messageListener(request, _sender, 
     debouncedQueryFill(service, document);
     sendResponse(1)
 })
+*/
 
 /**
  * Originally inspired by  David Walsh (https://davidwalsh.name/javascript-debounce-function)

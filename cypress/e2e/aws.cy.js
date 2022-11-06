@@ -51,5 +51,6 @@ describe("AWS autofill delete", () => {
     cy.get('[data-testid=sort-key-input-field] > input[type=text]').should('be.empty');
     cy.get('[class*=awsui_dialog] [class*=awsui_footer] button[data-testid=cancel-form]').click();
 
+    // Can't test VPC
   });
 });

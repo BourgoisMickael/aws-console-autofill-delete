@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
+# Parameters:
+#   DefaultVpcId:
+#     Type: String
+#   DefaultSubnetId:
+#     Type: String
+
 Resources:
   Bucket:
     Type: AWS::S3::Bucket
@@ -163,3 +169,30 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: autofill-delete-test-api
+
+  # VpcFlowLog:
+  #   Type: AWS::EC2::FlowLog
+  #   Properties:
+  #     LogDestinationType: s3
+  #     LogDestination: !GetAtt Bucket.Arn
+  #     ResourceId: !Ref DefaultVpcId
+  #     ResourceType: VPC
+  #     TrafficType: ALL
+
+  # VpcEgressOnlyIG:
+  #   Type: AWS::EC2::EgressOnlyInternetGateway
+  #   Properties: 
+  #     VpcId: !Ref DefaultVpcId
+
+  # VpcEndpoint:
+  #   Type: AWS::EC2::VPCEndpoint
+  #   Properties: 
+  #     ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+  #     VpcEndpointType: Gateway
+  #     VpcId: !Ref DefaultVpcId
+
+  # NatGateway:
+  #   Type: AWS::EC2::NatGateway
+  #   Properties:
+  #     ConnectivityType: private
+  #     SubnetId: !Ref DefaultSubnetId
