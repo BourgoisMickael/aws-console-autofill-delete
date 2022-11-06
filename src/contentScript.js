@@ -26,6 +26,9 @@ const queries = {
             const text = doc.querySelector(".modal-content .modal-body .modal-warning-message [translate='API.DELETE_CONFIRMATION_TEXT']>strong")?.innerText
             elem && text && autofill(elem, text)
         }
+    }, {
+        condition: () => getLocation()?.includes('apigateway/main/publish/domain-names'),
+        querySelector: 'body[class*=awsui-modal-open] .awsui-modal-body input[type=text][placeholder]'
     }],
     ATHENA: ["div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]"],
     DYNAMODBV2: [
