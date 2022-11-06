@@ -24,6 +24,20 @@ describe("AWS autofill delete", () => {
     cy.get('button.close').click();
     // TODO custom domain name and vpc links
 
+    // ATHENA
+    // workgroup
+    cy.visit(`https://${region}.console.aws.amazon.com/athena/home?region=${region}#/workgroups/details/autofill-delete-test-workgroup`);
+    cy.get('button[data-testid=delete-button]').click();
+    cy.get('button[data-testid=modal-confirm-button]').should('not.be.disabled');
+    cy.get('[data-testid=confirm-with-friction-modal] [class*=awsui_actions] button[class*=awsui_dismiss-control]').click();
+
+    // datasource
+    cy.visit(`https://${region}.console.aws.amazon.com/athena/home?region=${region}#/data-sources/details/autofill-delete-test-catalog`);
+    cy.get('[class*=awsui_header] [class*=awsui_button-dropdown] button[type=button]').click(); // actions dropdown
+    cy.get('ul[class*=awsui_options-list] > li[data-testid=modal-delete-item]').click();
+    cy.get('button[data-testid=modal-confirm-button]').should('not.be.disabled');
+    cy.get('[data-testid=confirm-with-friction-modal] [class*=awsui_actions] button[class*=awsui_dismiss-control]').click();
+
     // DYNAMODB
     // table
     cy.visit(`https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#tables`);

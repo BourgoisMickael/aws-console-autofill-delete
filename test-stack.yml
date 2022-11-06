@@ -196,3 +196,16 @@ Resources:
   #   Properties:
   #     ConnectivityType: private
   #     SubnetId: !Ref DefaultSubnetId
+
+  AthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: autofill-delete-test-workgroup
+
+  AthenaDataCatalog:
+    Type: AWS::Athena::DataCatalog
+    Properties:
+      Name: autofill-delete-test-catalog
+      Type: HIVE
+      Parameters:
+        metadata-function: !GetAtt Lambda.Arn
