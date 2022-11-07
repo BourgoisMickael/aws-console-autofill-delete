@@ -37,3 +37,16 @@ if [ $BACKUP_NUMBER -eq 0 ]; then
         --table-name autofill-delete-test-table \
         --backup-name autofill-delete-test-backup
 fi
+
+USERPOOL_ID=$(
+    aws cloudformation describe-stacks \
+        --region eu-west-3 \
+        --stack-name autofill-delete-test-stack \
+        --query "Stacks|[0].Outputs[?OutputKey=='UserPoolId'].OutputValue|[0]" \
+        --output text
+)
+
+aws cognito-idp admin-disable-user \
+    --region eu-west-3 \
+    --user-pool-id $USERPOOL_ID \
+    --username autofill-delete-test-user

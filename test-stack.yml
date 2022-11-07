@@ -209,3 +209,7 @@ Resources:
       Type: HIVE
       Parameters:
         metadata-function: !GetAtt Lambda.Arn
+
+Outputs:
+  UserPoolId:
+    Value: !Ref UserPool
