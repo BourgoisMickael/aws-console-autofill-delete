@@ -55,12 +55,23 @@ const queries = {
         }
     ],
     COGNITO: [
-        "div[data-testid=additional-confirmation-section] input[placeholder]",
-        ".columbia-modal input[type='text'][id*='textfield']"
-        // this should work for all modals like
-        // [data-testid=cognito-domain-delete-modal]
-        // [data-testid=delete-user-modal]
-        // [data-testid=confirm-delete-group-modal]
+        // OLD INTERFACE
+        {
+            // delete pool and group
+            condition: () => /cognito\/users.*#\/pool\/.+\/(?:details|groups\/)/.test(getLocation()),
+            querySelector: '.columbia-modal input[type=text][id*=textfield]'
+        },
+        // NEW INTERFACE
+        {
+            // delete pool / user
+            condition: () => getLocation()?.includes('cognito/v2/idp/user-pools'),
+            querySelector: '[data-testid=delete-user-modal] input[type=text]:not([disabled])'
+        },
+        {
+            // delete user / group / idp / cognito domain / custom domain / appclient / lambda trigger
+            condition: () => getLocation()?.includes('cognito/v2/idp/user-pools'),
+            querySelector: '[role=dialog]:not([class*=awsui_hidden]) [data-testid=additional-confirmation-section] input[type=text]'
+        }
     ],
     DOCDB: [{
         function: function docdb(doc) {
