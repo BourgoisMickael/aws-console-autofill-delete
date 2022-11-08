@@ -84,31 +84,27 @@ const queries = {
             else clusterElem && !clusterElem.disabled && autofill(clusterElem, clusterText.innerText);
         }
     }],
-    EVENTS: [{
-        function: function events(doc) {
-            const schemaElem = doc.querySelector("#schema-details-content");
-            if (schemaElem) return // Too much text in <strong>. Can't perform language insensitive autofill
-
-            const archiveElem = doc.querySelector("#archives-table .awsui-modal-body input[placeholder]")
-            if (archiveElem) return autofill(archiveElem, doc.querySelector("#archives-table .awsui-modal-body strong")?.innerText)
-
-            const archiveElem2 = doc.querySelector(".awsui-modal-body input[name=archives-modal-delete-input][placeholder]");
-            if (archiveElem2) return autofill(archiveElem2, doc.querySelector(".awsui-modal-body strong")?.innerText)
-
-            const apiDestConnElem = doc.querySelector(".awsui-modal-body input[name=connections-modal-input][placeholder]");
-            if (apiDestConnElem) return autofill(apiDestConnElem, doc.querySelector(".awsui-modal-body strong")?.innerText)
-
-            const apiDestElem = doc.querySelector("[id$=apiDestinationTabId-panel] .awsui-modal-body input[placeholder]")
-            if (apiDestElem) return autofill(apiDestElem, doc.querySelector("[id$=apiDestinationTabId-panel] .awsui-modal-body strong")?.innerText);
-
-            const apiDestElem2 = doc.querySelector(".awsui-modal-body input[name=apiDestinations-modal-delete-input][placeholder]");
-            if (apiDestElem2) return autofill(apiDestElem2, doc.querySelector(".awsui-modal-body strong")?.innerText)
-
-            const defaultElem = doc.querySelector("[data-test-selector=rule-action-modal] input[placeholder]")
-                || doc.querySelector(".awsui-modal-body input[placeholder]")
-            defaultElem && autofill(defaultElem, defaultElem.placeholder)
+    EVENTS: [
+        // rule from list
+        "#rules-section .awsui-modal-body input[placeholder]",
+        // rule from detail
+        "[data-test-selector=rule-action-modal] [data-test-selector=rule-action-modal-input] input[placeholder]",
+        // global endpoint / archive / api destionations / connections
+        {
+            querySelector: 'input[name=endpoints-modal-delete-input], input[name=archives-modal-delete-input], input[name=apiDestinations-modal-delete-input], input[name=connections-modal-input], input[name=schemas-delete-registry]',
+            text: doc => doc.querySelector('#modal-resource-name')?.innerText
+        },
+        // schema
+        {
+            condition: () => /events\/home.*?#\/registries\/.*?\/schemas\/.*/.test(getLocation()),
+            // `label ~` allow to skip edit description modal as there is no label in this modal
+            querySelector: 'body.awsui-modal-open awsui-modal [role=dialog]:not(.awsui-modal-hidden) awsui-form-field label ~ div input[type=text]',
+            text: () => {
+                const schema = /events\/home.*?#\/registries\/.*?\/schemas\/(.+?)(?:\/version\/\d+)?$/.exec(getLocation())?.[1]
+                return schema && decodeURIComponent(schema);
+            }
         }
-    }],
+    ],
     IAM: [
         '.delete-access-key-section input[placeholder]'
     ],
@@ -143,9 +139,9 @@ async function queryFill(service, doc) {
                 q.function(doc)
             }
             else if (typeof q === 'object' && !q.function) {
-                const elem = q.condition() && doc.querySelector(q.querySelector)
+                const elem = (q.condition ? q.condition() : true) && doc.querySelector(q.querySelector)
                 if (elem) {
-                    const value = !elem.disabled && elem.placeholder || (service === 'COGNITO' ? 'delete' : undefined);
+                    const value = q.text ? q.text(doc) : (!elem.disabled && elem.placeholder) || (service === 'COGNITO' ? 'delete' : undefined);
                     // console.debug("Found", elem, elem.disabled, value);
                     if (value) autofill(elem, value)
                 }
