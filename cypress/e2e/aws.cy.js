@@ -148,6 +148,90 @@ describe("AWS autofill delete", () => {
     cy.get('[data-testid=confirm-delete-lambda-trigger-modal]:not([class*=awsui_hidden]) button[data-testid=confirm]').should('not.be.disabled');
     cy.get('[data-testid=confirm-delete-lambda-trigger-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click();
 
+    // TODO DOCDB
+
+    // EVENTBRIDGE
+    // rule from list
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/rules`);
+    cy.get('#rules-section table > tbody > tr:first-child input[type=checkbox]').click(); // select first rule
+    cy.get('#rules-table-delete-rule > button').click(); // delete
+    cy.get('.awsui-modal-dialog #rules-table-confirm button').should('not.be.disabled');
+    cy.get('.awsui-modal-dialog #rules-table-dismiss button').click();
+    // rule from detail
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/eventbus/default/rules/autofill-delete-test-eventrule`);
+    cy.get('button#rules-details-delete-rule').click(); // delete
+    cy.get('button[data-test-selector=rule-action-modal-confirm-button]').should('not.be.disabled');
+    cy.get('button[data-test-selector=rule-action-modal-dismiss-button]').click();
+
+    // global endpoint from list
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`)
+    cy.get('#multiverse-table table > tbody > tr:first-child input[type=radio]').click(); // select first endpoint
+    cy.get('#endpoints-table-delete button').click(); // delete
+    cy.get('#endpoints-modal-confirm button').should('not.be.disabled');
+    cy.get('#endpoints-modal-cancel button').click();
+    // global endpoint from detail
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`)
+    cy.get('#multiverse-table table > tbody > tr:first-child > td:nth-child(2) a').click() // first endpoint link
+    cy.wait(1000); // wait because page changes and we need to get new button with same id from previous page
+    cy.get('#endpoints-table-delete button').click() // delete
+    cy.get('#endpoints-modal-confirm button').should('not.be.disabled');
+    cy.get('#endpoints-modal-cancel button').click();
+
+    // archive from list
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/archives`);
+    cy.get('#archives-table table > tbody > tr:first-child input[type=radio]').click() // select first archive
+    cy.get('#archives-table #archives-table-delete button').click(); // delete
+    cy.get('#archives-modal-confirm > button').should('not.be.disabled');
+    cy.get('#archives-modal-cancel > button').click();
+    // archive from detail
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/archive/autofill-delete-test-archive`);
+    cy.get('#archives-table-delete button').click(); // delete
+    cy.get('#archives-modal-confirm > button').should('not.be.disabled');
+    cy.get('#archives-modal-cancel > button').click();
+
+    // api destinations from list
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/apidestinations`);
+    cy.get('[role=tabpanel][id*=apiDestinationTabId-panel] table > tbody > tr:first-child input[type=radio]').click(); // select first destination
+    cy.get('[role=tabpanel][id*=apiDestinationTabId-panel] #apidestinations-action-group-delete').click(); // delete
+    cy.get('#apiDestinations-modal-confirm button').should('not.be.disabled');
+    cy.get('#apidestinations-modal-cancel button').click();
+
+    // connections from list
+    cy.get('[role=tab][data-testid=connectionTabId]').click(); // connections
+    cy.get('[role=tabpanel][id*=connectionTabId-panel] table > tbody > tr:first-child input[type=radio]').click(); // select first destination
+    cy.get('[role=tabpanel][id*=connectionTabId-panel] #connections-action-group-delete').click(); // delete
+    cy.get('#connections-modal-confirm button').should('not.be.disabled');
+    cy.get('#connections-modal-cancel button').click();
+
+    // api destinations from detail
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/apidestinations/autofill-delete-test-apidestination`);
+    cy.get('#apidestinations-action-group-delete').click(); // delete
+    cy.get('#apiDestinations-modal-confirm button').should('not.be.disabled');
+    cy.get('#apidestinations-modal-cancel button').click();
+
+    // connections from detail
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/connections/autofill-delete-test-connection`);
+    cy.get('#connections-action-group-delete button').click() // delete
+    cy.get('#connections-modal-confirm button').should('not.be.disabled');
+    cy.get('#connections-modal-cancel button').click();
+
+    // schema registry
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/schemas?registry=autofill-delete-test-registry`);
+    cy.get('[id$=registry-details-panel] awsui-button:first-child button').click(); // delete
+    cy.get('#schemas-modal-delete_registry button').should('not.be.disabled');
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) .awsui-modal-dismiss-control').click();
+
+    // schema
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/registries/autofill-delete-test-registry/schemas/autofill-delete-test-schema%40schema`);
+    cy.get('div:has(~ #schema-details-content):first-child .awsui-util-action-stripe-group button').click(); // delete
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) #table-confirm').should('not.be.disabled');
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) #table-dismiss').click();
+
+    // ensure description modal is not filled
+    cy.get('div:has(+ #schema-details-content) .awsui-util-action-stripe-group button').click(); // edit description
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) input[type=text').should('be.empty');
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) #table-dismiss').click();
+
     // Can't test VPC
   });
 });

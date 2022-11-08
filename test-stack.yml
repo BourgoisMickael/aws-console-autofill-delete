@@ -90,6 +90,7 @@ Resources:
   EventRule:
     Type: AWS::Events::Rule
     Properties:
+      Name: autofill-delete-test-eventrule
       EventBusName: default
       EventPattern:
         source:
@@ -119,6 +120,40 @@ Resources:
       ConnectionArn: !GetAtt EventConnection.Arn
       HttpMethod: GET
       InvocationEndpoint: https://example.com
+
+  EventBridgeGlobalEndpointHealthCheck:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://global-endpoint-downloads.s3.amazonaws.com/global-endpoint-healthcheck.yaml
+
+  EventBridgeGlobalEndpoint:
+    Type: AWS::Events::Endpoint
+    Properties:
+      Name: autofill-delete-test-globalendpoint
+      EventBuses:
+        - EventBusArn: !Sub arn:${AWS::Partition}:events:eu-west-3:${AWS::AccountId}:event-bus/default
+        - EventBusArn: !Sub arn:${AWS::Partition}:events:eu-west-2:${AWS::AccountId}:event-bus/default
+      ReplicationConfig:
+        State: DISABLED
+      RoutingConfig:
+        FailoverConfig:
+          Primary:
+            HealthCheck: !Sub arn:${AWS::Partition}:route53:::healthcheck/${EventBridgeGlobalEndpointHealthCheck.Outputs.HealthCheckId}
+          Secondary:
+            Route: eu-west-2
+
+  EventSchemaRegistry:
+    Type: AWS::EventSchemas::Registry
+    Properties:
+      RegistryName: autofill-delete-test-registry
+
+  EventSchemaSchema:
+    Type: AWS::EventSchemas::Schema
+    Properties:
+      RegistryName: !GetAtt EventSchemaRegistry.RegistryName
+      SchemaName: autofill-delete-test-schema@schema
+      Type: OpenApi3
+      Content: '{"openapi":"3.0.0","info":{"version": "1.0.0","title":""},"paths": {}}'
 
   UserPool:
     Type: AWS::Cognito::UserPool
