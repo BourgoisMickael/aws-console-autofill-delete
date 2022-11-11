@@ -1,5 +1,12 @@
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
+/**
+ * Catch quotes in any language
+ * @see https://en.wikipedia.org/wiki/Quotation_mark#Unicode_code_point_table
+ */
+const quoteRegex = /["'«»‘’‚‛“”„‟‹›⹂⌜⌝❛❜❝❞🙶🙷🙸⠴⠦「」『』〝〞〟﹁﹂﹃﹄＂＇｢｣《》〈〉]/
+const quotedWordRegex = new RegExp(`${quoteRegex.source}\\s*(.*?)\\s*${quoteRegex.source}`);
+
 function autofill(elem, data) {
     if (!elem) return
     if (elem.value === data) return;
@@ -106,7 +113,19 @@ const queries = {
         }
     ],
     IAM: [
-        '.delete-access-key-section input[placeholder]'
+        // Users > Security credentials > Access keys
+        '.delete-access-key-section input[placeholder]',
+        // Users > Security credentials > HTTPS Git credentials for AWS CodeCommit | Credentials for Amazon Keyspaces (for Apache Cassandra)
+        {
+            // delete
+            querySelector: 'delete-service-credential-modal input[type=text]',
+            text: (doc) => quotedWordRegex.exec(doc.querySelector('delete-service-credential-modal label')?.innerText)?.[1]
+        },
+        {
+            // reset password
+            querySelector: 'service-credentials-reset-password-modal input[type=text]',
+            text: (doc) => quotedWordRegex.exec(doc.querySelector('service-credentials-reset-password-modal label')?.innerText)?.[1]
+        }
     ],
     IAMV2: [
         "#app #DELETE_USERS_MODAL input[placeholder]",
