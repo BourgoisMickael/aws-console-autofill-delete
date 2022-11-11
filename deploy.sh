@@ -50,3 +50,31 @@ aws cognito-idp admin-disable-user \
     --region eu-west-3 \
     --user-pool-id $USERPOOL_ID \
     --username autofill-delete-test-user
+
+IAM_SERVICE_CREDS=$(aws iam list-service-specific-credentials --user-name autofill-delete-test-user)
+IAM_CREDS_CODE_COMMIT=$(echo $IAM_SERVICE_CREDS | jq ".ServiceSpecificCredentials | any(.ServiceName==\"codecommit.amazonaws.com\")")
+IAM_CREDS_KEYSPACES=$(echo $IAM_SERVICE_CREDS | jq ".ServiceSpecificCredentials | any(.ServiceName==\"cassandra.amazonaws.com\")")
+
+if [ "$IAM_CREDS_CODE_COMMIT" == "false" ]; then
+    aws iam create-service-specific-credential \
+        --user-name autofill-delete-test-user \
+        --service-name codecommit.amazonaws.com \
+        --query "ServiceSpecificCredential.ServiceSpecificCredentialId" \
+        --output text \
+    | xargs -I {} aws iam update-service-specific-credential \
+        --user-name autofill-delete-test-user \
+        --service-specific-credential-id {} \
+        --status Inactive
+fi
+
+if [ "$IAM_CREDS_KEYSPACES" == "false" ]; then
+    aws iam create-service-specific-credential \
+        --user-name autofill-delete-test-user \
+        --service-name cassandra.amazonaws.com \
+        --query "ServiceSpecificCredential.ServiceSpecificCredentialId" \
+        --output text \
+    | xargs -I {} aws iam update-service-specific-credential \
+        --user-name autofill-delete-test-user \
+        --service-specific-credential-id {} \
+        --status Inactive
+fi

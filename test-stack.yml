@@ -32,6 +32,7 @@ Resources:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref IAMUser
+      Status: Inactive
 
   IAMRole:
     Type: AWS::IAM::Role
