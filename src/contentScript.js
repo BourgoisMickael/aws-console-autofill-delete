@@ -128,6 +128,7 @@ const queries = {
         }
     ],
     IAMV2: [
+        '#app #DELETE_GROUPS_MODAL input[placeholder]',
         "#app #DELETE_USERS_MODAL input[placeholder]",
         "#app #DELETE_ROLE_MODAL input[placeholder]",
         "#app #DELETE_POLICY_MODAL input[placeholder]",
