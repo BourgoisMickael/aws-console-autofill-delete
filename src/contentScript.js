@@ -136,9 +136,11 @@ const queries = {
     ],
     LAMBDA: ['#function-list-delete-modal input[placeholder]'],
     S3: [
-        "#app .delete-objects__form .delete-objects__input__input input[placeholder]",
-        "#app .empty-bucket .empty-bucket-actions .empty-bucket-actions__input input[placeholder]",
-        "#app .delete-bucket-actions__form .delete-bucket-actions__input input[placeholder]",
+        "#app .delete-objects__form .delete-objects__input__input input[placeholder]", // delete objects
+        "#app .empty-bucket .empty-bucket-actions .empty-bucket-actions__input input[placeholder]", // empty bucket
+        "#app .delete-bucket-actions__form .delete-bucket-actions__input input[placeholder]", // delete bucket
+        "#app .access-points-list awsui-modal.two-factor-confirmation-modal input[placeholder]", // delete access point
+        "#app awsui-modal .global-confirmation-modal__two-factor input[placeholder]" // delete object lambda and multi region access point
     ],
     SINGLESIGNON: [
         "#delete-group-modal input[placeholder]"
