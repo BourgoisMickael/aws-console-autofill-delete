@@ -145,7 +145,13 @@ const queries = {
     SINGLESIGNON: [
         "#delete-group-modal input[placeholder]"
     ],
-    SNS: ["#app .awsui-modal-body input[placeholder]"],
+    SNS: [
+        // delete topic and phone number
+        {
+            condition: () => /topic|mobile\/text-messaging/.test(getLocation()),
+            querySelector: "body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]"
+        }
+    ],
     SQS: ["#app #purge-queue-modal input[placeholder]", "#app #delete-queue-modal input[placeholder]"],
     VPC: ["body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]"],
     WAFV2: [
