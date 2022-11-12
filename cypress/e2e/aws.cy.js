@@ -265,6 +265,34 @@ describe("AWS autofill delete", () => {
     cy.get('service-credentials-reset-password-modal input[type=text]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
     cy.get('service-credentials-reset-password-modal awsui-button.modal-cancel button').click();
 
+    // IAM
+    // groups
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/groups')
+    cy.get('.group-table table > tbody > tr:first-child input[type=checkbox]').click(); // select first group
+    cy.get('.awsui-group-delete-button button').click(); // delete
+    cy.get('#app #DELETE_GROUPS_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('#DELETE_GROUPS_MODAL [data-cy=cancel-modal] button').click();
+    // users
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/users')
+    cy.get('#users-list table > tbody > tr:first-child input[type=checkbox]').click(); // select first user
+    cy.get('.awsui-user-delete-button button').click(); // delete
+    cy.get('#app #DELETE_USERS_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('#DELETE_USERS_MODAL [data-cy=cancel-modal] button').click();
+    // roles
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/roles')
+    cy.get('#roles-list table > tbody > tr:first-child input[type=checkbox]').click(); // select first role
+    cy.get('.awsui-role-delete-button button').click(); // delete
+    cy.get('#app #DELETE_ROLE_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('#DELETE_ROLE_MODAL [data-cy=cancel-modal] button').click();
+    // policies
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/policies')
+    cy.get('#policies-list-view-table table > tbody > tr:first-child input[type=radio]').click(); // select first policy
+    cy.get('awsui-button-dropdown#POLICY_LIST_ACTIONS').click(); // action dropdown
+    cy.get('awsui-button-dropdown#POLICY_LIST_ACTIONS li[data-testid=delete]').click(); // delete
+    cy.get('#app #DELETE_POLICY_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('#DELETE_POLICY_MODAL [data-cy=cancel-modal] button').click();
+    // TODO IDP
+
     // Can't test VPC
   });
 });
