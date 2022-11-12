@@ -332,6 +332,15 @@ describe("AWS autofill delete", () => {
     cy.get('.two-factor-confirmation-modal__cancel-button button').click();
     // TODO object lambda / multi region ap
 
+    // TODO Single Sign On
+
+    // SNS topic
+    cy.visit(`https://${region}.console.aws.amazon.com/sns/v3/home?region=${region}#/topics`);
+    cy.get('main table tbody > tr:first-child input[type=radio]').click(); // select first topic
+    cy.get('main .awsui-table-header [class*=awsui-util-action-stripe-group] div:nth-child(2) button').click() // delete
+    cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:nth-child(2) button').should('not.be.disabled');
+    cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
+
     // Can't test VPC
   });
 });
