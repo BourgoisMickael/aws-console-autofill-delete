@@ -28,6 +28,11 @@ Resources:
     Properties:
       UserName: autofill-delete-test-user
 
+  IAMGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: autofill-delete-test-group
+
   IAMAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
