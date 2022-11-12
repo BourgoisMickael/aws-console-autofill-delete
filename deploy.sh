@@ -24,6 +24,16 @@ sam deploy \
     #     ParameterKey=DefaultVpcId,ParameterValue=$DEFAULT_VPC_ID \
     #     ParameterKey=DefaultSubnetId,ParameterValue=$DEFAULT_SUBNET_ID"
 
+STACK_OUTPUT=$(
+    aws cloudformation describe-stacks \
+        --region eu-west-3 \
+        --stack-name autofill-delete-test-stack \
+        --query "Stacks|[0].Outputs" \
+        --output text
+)
+USERPOOL_ID=$(echo "$STACK_OUTPUT" | grep "UserPoolId" | cut -f2)
+BUCKET=$(echo "$STACK_OUTPUT" | grep "Bucket" | cut -f2)
+
 BACKUP_NUMBER=$(
     aws dynamodb list-backups \
         --region eu-west-3 \
@@ -37,14 +47,6 @@ if [ $BACKUP_NUMBER -eq 0 ]; then
         --table-name autofill-delete-test-table \
         --backup-name autofill-delete-test-backup
 fi
-
-USERPOOL_ID=$(
-    aws cloudformation describe-stacks \
-        --region eu-west-3 \
-        --stack-name autofill-delete-test-stack \
-        --query "Stacks|[0].Outputs[?OutputKey=='UserPoolId'].OutputValue|[0]" \
-        --output text
-)
 
 aws cognito-idp admin-disable-user \
     --region eu-west-3 \
@@ -78,3 +80,5 @@ if [ "$IAM_CREDS_KEYSPACES" == "false" ]; then
         --service-specific-credential-id {} \
         --status Inactive
 fi
+
+aws s3 cp README.md s3://$BUCKET

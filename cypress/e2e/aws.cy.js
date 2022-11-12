@@ -301,6 +301,37 @@ describe("AWS autofill delete", () => {
     cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:last-child button').should('not.be.disabled');
     cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
 
+    // S3
+    // delete object
+    cy.visit(`https://s3.console.aws.amazon.com/s3/buckets?region=${region}`);
+    cy.get('[data-testid=buckets-table] table tbody tr:has(td a.bucket-name[href*=autofill-delete-test-stack-bucket]) a').click(); // select the bucket
+    cy.get('.s3-objects-view-container #objects-table table tbody > tr:first-child input[type=checkbox]').click(); // select first object
+    cy.get('awsui-button#delete-objects-button').click(); // delete object
+    cy.wait(2000); // wait when changing page
+    cy.get('.delete-objects .delete-objects__actions-submit button').should('not.be.disabled');
+    cy.get('.delete-objects .delete-objects__actions-cancel button').click();
+    // empty bucket
+    cy.visit(`https://s3.console.aws.amazon.com/s3/buckets?region=${region}`);
+    cy.get('[data-testid=buckets-table] table tbody tr:has(td a.bucket-name[href*=autofill-delete-test-stack-bucket]) input[type=radio]').click(); // select the bucket
+    cy.get('[data-testid=buckets-table] awsui-button[data-analytics=emptyButton] button').click(); // empty bucket
+    cy.wait(2000); // wait when changing page
+    cy.get('.empty-bucket-actions__submit button').should('not.be.disabled');
+    cy.get('.empty-bucket-actions__cancel button').click();
+    // delete bucket
+    cy.visit(`https://s3.console.aws.amazon.com/s3/buckets?region=${region}`);
+    cy.get('[data-testid=buckets-table] table tbody tr:has(td a.bucket-name[href*=autofill-delete-test-stack-emptybucket]) input[type=radio]').click(); // select the bucket
+    cy.get('[data-testid=buckets-table] awsui-button[data-analytics=deleteButton] button').click(); // delete bucket
+    cy.wait(2000); // wait when changing page
+    cy.get('.delete-bucket-actions__actions-submit button').should('not.be.disabled');
+    cy.get('.delete-bucket-actions__actions-cancel button').click();
+    // delete access point
+    cy.visit(`https://s3.console.aws.amazon.com/s3/ap?region=${region}`);
+    cy.get('.access-points-list table tbody > tr:first-child input[type=radio]').click(); // select first AP
+    cy.get('.access-points-list .access-points-list-table__delete-ap-button').click(); // delete
+    cy.get('.two-factor-confirmation-modal__confirm-button button').should('not.be.disabled');
+    cy.get('.two-factor-confirmation-modal__cancel-button button').click();
+    // TODO object lambda / multi region ap
+
     // Can't test VPC
   });
 });

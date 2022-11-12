@@ -17,6 +17,21 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
 
+  EmptyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  S3AccessPoint:
+    Type: AWS::S3::AccessPoint
+    Properties:
+      Bucket: !Ref Bucket
+      Name: autofill-delete-test-ap
+
   Queue:
     Type: AWS::SQS::Queue
 
@@ -254,3 +269,5 @@ Resources:
 Outputs:
   UserPoolId:
     Value: !Ref UserPool
+  Bucket:
+    Value: !Ref Bucket
