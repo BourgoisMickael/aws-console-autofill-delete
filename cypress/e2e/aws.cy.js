@@ -293,6 +293,14 @@ describe("AWS autofill delete", () => {
     cy.get('#DELETE_POLICY_MODAL [data-cy=cancel-modal] button').click();
     // TODO IDP
 
+    // Lambda
+    cy.visit(`https://${region}.console.aws.amazon.com/lambda/home?region=${region}#/functions`);
+    cy.get('#lambda-listFunctions table > tbody > tr:first-child input[type=checkbox]').click(); // select first function
+    cy.get('#lambda-listFunctions [class*=awsui_actions] [class*=awsui_button-dropdown] button').click() // action dropdown
+    cy.get('#lambda-listFunctions [class*=awsui_actions] [class*=awsui_button-dropdown] li[data-testid=delete]').click(); // delete
+    cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:last-child button').should('not.be.disabled');
+    cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
+
     // Can't test VPC
   });
 });
