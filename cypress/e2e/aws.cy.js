@@ -71,7 +71,8 @@ describe("AWS autofill delete", () => {
     cy.visit(`https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#create-table`);
     cy.get('div[role=radiogroup] [data-value=CUSTOMIZED] input[value=CUSTOMIZED][type=radio]').click();
     cy.get('button[data-testid=create-lsi]').click();
-    cy.get('[data-testid=sort-key-input-field] > input[type=text]').should('be.empty');
+    cy.wait(3000); // wait some time for extention to potentially fill input
+    cy.get('[class*=awsui_dialog] [data-testid=sort-key-input-field] > input[type=text]').invoke('val').its('length').should('eq', 0);
     cy.get('[class*=awsui_dialog] [class*=awsui_footer] button[data-testid=cancel-form]').click();
 
     // COGNITO
@@ -96,7 +97,8 @@ describe("AWS autofill delete", () => {
     cy.get('.cog-pool-nav a[data-reactid=".0.2.0.1.0.0.0.1.0.0"]').click(); // User and groups
     cy.get('button[data-reactid=".0.2.0.1.0.1.0.0.1"]').click(); // Groups
     cy.get('button[data-reactid=".0.2.0.1.0.1.0.0.2.1.1.0.0"]').click() // create group
-    cy.get('input[type=text][data-reactid=".0.2.0.1.0.1.0.0.2.0.0.1.1.1"]').should('be.empty');
+    cy.wait(3000); // wait some time for extention to potentially fill input
+    cy.get('input[type=text][data-reactid=".0.2.0.1.0.1.0.0.2.0.0.1.1.1"]').invoke('val').its('length').should('eq', 0);
     cy.get('div[data-reactid=".0.2.0.1.0.1.0.0.2.0.0.0"]').click() // close modal
 
     // New interface
@@ -229,7 +231,8 @@ describe("AWS autofill delete", () => {
 
     // ensure description modal is not filled
     cy.get('div:has(+ #schema-details-content) .awsui-util-action-stripe-group button').click(); // edit description
-    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) input[type=text').should('be.empty');
+    cy.wait(3000); // wait some time for extention to potentially fill input
+    cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) input[type=text').invoke('val').its('length').should('eq', 0);
     cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) #table-dismiss').click();
 
     // IAM > user credentials
