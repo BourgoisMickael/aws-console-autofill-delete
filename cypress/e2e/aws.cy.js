@@ -232,6 +232,36 @@ describe("AWS autofill delete", () => {
     cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) input[type=text').should('be.empty');
     cy.get('[role=dialog]:not([class*=awsui-modal-hidden]) #table-dismiss').click();
 
+    // IAM > user credentials
+    // Access keys
+    cy.visit(`https://us-east-1.console.aws.amazon.com/iam/home#/users/autofill-delete-test-user?section=security_credentials`);
+    cy.get('#iam-content').scrollTo('center'); // otherwise it can't find the element below
+    cy.get('.user-credentials-access-keys iam-table .body .data:first-child .cell:last-child span').click(); // first access key
+    cy.get('delete-access-key-modal-destructive-action .awsui-modal-footer .modal-confirm button').should('not.be.disabled');
+    cy.get('delete-access-key-modal-destructive-action .awsui-modal-footer .modal-cancel button').click();
+    // HTTPS Git credentials for AWS CodeCommit
+    // Delete
+    cy.get('service-credentials[service-name=codecommit] iam-table .body .data:first-child iam-radio').click(); // select first creds
+    cy.get('service-credentials[service-name=codecommit] dropdown.actions-button > .dropdown > awsui-button button').click(); // Actions
+    cy.get('service-credentials[service-name=codecommit] dropdown.actions-button > .dropdown > ul > menu-item.delete').click(); // delete
+    cy.get('delete-service-credential-modal input[type=text]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('delete-service-credential-modal awsui-button.modal-cancel button').click();
+    // Reset password
+    cy.get('service-credentials[service-name=codecommit] dropdown.actions-button > .dropdown > ul > menu-item.reset').click(); // reset
+    cy.get('service-credentials-reset-password-modal input[type=text]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('service-credentials-reset-password-modal awsui-button.modal-cancel button').click();
+    // Credentials for Amazon Keyspaces (for Apache Cassandra)
+    // Delete
+    cy.get('service-credentials[service-name=cassandra] iam-table .body .data:first-child iam-radio').click(); // select first creds
+    cy.get('service-credentials[service-name=cassandra] dropdown.actions-button > .dropdown > awsui-button button').click(); // Actions
+    cy.get('service-credentials[service-name=cassandra] dropdown.actions-button > .dropdown > ul > menu-item.delete').click(); // delete
+    cy.get('delete-service-credential-modal input[type=text]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('delete-service-credential-modal awsui-button.modal-cancel button').click();
+    // Reset password
+    cy.get('service-credentials[service-name=cassandra] dropdown.actions-button > .dropdown > ul > menu-item.reset').click(); // reset
+    cy.get('service-credentials-reset-password-modal input[type=text]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
+    cy.get('service-credentials-reset-password-modal awsui-button.modal-cancel button').click();
+
     // Can't test VPC
   });
 });
