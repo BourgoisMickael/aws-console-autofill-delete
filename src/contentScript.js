@@ -190,9 +190,10 @@ const iframes = {
 
 const observer = new MutationObserver(function (_mutations, _observer) {
     const service = getService()
+    const doc = getDocument()
 
-    if (!service) return
-    if (!iframes[service]) return debouncedQueryFill(service, getDocument())
+    if (!service || !doc) return
+    if (!iframes[service]) return debouncedQueryFill(service, doc)
 
     let iframe
     try {
