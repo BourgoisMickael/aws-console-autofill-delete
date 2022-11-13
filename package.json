@@ -4,7 +4,8 @@
   "description": "Extension to autofill delete confirmation on aws console",
   "scripts": {
     "test": "cypress run --browser chrome --headed --no-exit --spec cypress/e2e/aws.cy.js",
-    "test:open": "cypress open --browser chrome --e2e"
+    "test:open": "cypress open --browser chrome --e2e",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
