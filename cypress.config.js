@@ -1,4 +1,5 @@
-const { defineConfig } = require("cypress");
+const { defineConfig } = require('cypress');
+const path = require('path');
 
 module.exports = defineConfig({
   e2e: {
@@ -7,11 +8,11 @@ module.exports = defineConfig({
       on('before:browser:launch', (browser, launchOptions) => {
         // supply the absolute path to an unpacked extension's folder
         // NOTE: extensions cannot be loaded in headless Chrome
-        launchOptions.extensions.push(`${__dirname}/src`)
-        launchOptions.args.push('--auto-open-devtools-for-tabs') // chrome
-      
-        return launchOptions
-      })
+        launchOptions.extensions.push(path.join(__dirname, 'src'));
+        launchOptions.args.push('--auto-open-devtools-for-tabs'); // chrome
+
+        return launchOptions;
+      });
     },
   },
 });

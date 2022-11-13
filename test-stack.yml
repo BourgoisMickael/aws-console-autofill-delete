@@ -92,7 +92,7 @@ Resources:
           KeySchema:
             - AttributeName: id
               KeyType: HASH
-          Projection: 
+          Projection:
             ProjectionType: ALL
       Replicas:
         - Region: eu-west-3
@@ -180,7 +180,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: autofill-delete-test-pool
-      LambdaConfig: 
+      LambdaConfig:
         CustomMessage: !GetAtt Lambda.Arn
 
   UserPoolClient:
@@ -237,12 +237,12 @@ Resources:
 
   # VpcEgressOnlyIG:
   #   Type: AWS::EC2::EgressOnlyInternetGateway
-  #   Properties: 
+  #   Properties:
   #     VpcId: !Ref DefaultVpcId
 
   # VpcEndpoint:
   #   Type: AWS::EC2::VPCEndpoint
-  #   Properties: 
+  #   Properties:
   #     ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
   #     VpcEndpointType: Gateway
   #     VpcId: !Ref DefaultVpcId

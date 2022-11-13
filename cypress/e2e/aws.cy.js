@@ -1,19 +1,19 @@
-describe("AWS autofill delete", () => {
-  it("run", () => {
+describe('AWS autofill delete', () => {
+  it('run', () => {
     cy.viewport(1144, 693);
     const baseDomain = Cypress.env('baseDomain');
     const username = Cypress.env('username');
     const password = Cypress.env('password');
-    const region = Cypress.env('region')
+    const region = Cypress.env('region');
 
     // LOGIN
     cy.visit(`https://${baseDomain}.signin.aws.amazon.com/console`);
-    cy.get("#username").type(username);
-    cy.get("#password").type(password);
-    cy.get("#signin_button").click();
-    cy.location("href").should("eq", `https://${region}.console.aws.amazon.com/console/home?region=${region}#`);
+    cy.get('#username').type(username);
+    cy.get('#password').type(password);
+    cy.get('#signin_button').click();
+    cy.location('href').should('eq', `https://${region}.console.aws.amazon.com/console/home?region=${region}#`);
     // Hide cookie popup
-    cy.get("#awsccc-cb-buttons > button:nth-child(2) > span").click();
+    cy.get('#awsccc-cb-buttons > button:nth-child(2) > span').click();
 
     // APIGATEWAY
     cy.visit(`https://${region}.console.aws.amazon.com/apigateway/main/apis?region=${region}`);
@@ -55,15 +55,15 @@ describe("AWS autofill delete", () => {
 
     // index
     cy.visit(`https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#table?initialTagKey=&name=autofill-delete-test-globaltable&tab=indexes`);
-    cy.get('[data-testid=polaris-app-layout] main .detailsContainer table >tbody > tr:first-child input[type=radio]').click() // first index
-    cy.get('[data-testid=polaris-app-layout] main .detailsContainer awsui-table [class*=awsui-table-header] [class*=awsui_actions] > div > div:first-child button[type=submit]').click() // delete button
+    cy.get('[data-testid=polaris-app-layout] main .detailsContainer table >tbody > tr:first-child input[type=radio]').click(); // first index
+    cy.get('[data-testid=polaris-app-layout] main .detailsContainer awsui-table [class*=awsui-table-header] [class*=awsui_actions] > div > div:first-child button[type=submit]').click(); // delete button
     cy.get('.awsui-modal-footer button[data-testid=submit-form]').should('not.be.disabled');
     cy.get('.awsui-modal-footer button[data-testid=cancel-form]').click();
 
     // replica (global table)
     cy.visit(`https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#table?initialTagKey=&name=autofill-delete-test-globaltable&tab=globalTables`);
-    cy.get('[data-testid=polaris-app-layout] main .detailsContainer table > tbody > tr:first-child input[type=radio]').click() // first replica
-    cy.get('[data-testid=polaris-app-layout] main .detailsContainer [class*=awsui_header] [class*=awsui_actions] > div > div:nth-child(2) button[type=submit]').click() // delete button
+    cy.get('[data-testid=polaris-app-layout] main .detailsContainer table > tbody > tr:first-child input[type=radio]').click(); // first replica
+    cy.get('[data-testid=polaris-app-layout] main .detailsContainer [class*=awsui_header] [class*=awsui_actions] > div > div:nth-child(2) button[type=submit]').click(); // delete button
     cy.get('[class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:last-child button[type=submit]').should('not.be.disabled');
     cy.get('[class*=awsui_dialog] [class*=awsui_header] [class*=awsui_actions] button[class*=awsui_dismiss-control]').click();
 
@@ -96,14 +96,14 @@ describe("AWS autofill delete", () => {
     // ensure creation modal is not autofilled (create group)
     cy.get('.cog-pool-nav a[data-reactid=".0.2.0.1.0.0.0.1.0.0"]').click(); // User and groups
     cy.get('button[data-reactid=".0.2.0.1.0.1.0.0.1"]').click(); // Groups
-    cy.get('button[data-reactid=".0.2.0.1.0.1.0.0.2.1.1.0.0"]').click() // create group
+    cy.get('button[data-reactid=".0.2.0.1.0.1.0.0.2.1.1.0.0"]').click(); // create group
     cy.wait(3000); // wait some time for extention to potentially fill input
     cy.get('input[type=text][data-reactid=".0.2.0.1.0.1.0.0.2.0.0.1.1.1"]').invoke('val').its('length').should('eq', 0);
-    cy.get('div[data-reactid=".0.2.0.1.0.1.0.0.2.0.0.0"]').click() // close modal
+    cy.get('div[data-reactid=".0.2.0.1.0.1.0.0.2.0.0.0"]').click(); // close modal
 
     // New interface
     cy.visit(`https://${region}.console.aws.amazon.com/cognito/v2/idp/user-pools?region=${region}`);
-    cy.get('main table > tbody > tr:first-child > td > a').click() // first user pool
+    cy.get('main table > tbody > tr:first-child > td > a').click(); // first user pool
     // user pool
     cy.get('main [class*=awsui_actions] > button[type=submit]').click(); // delete user pool
     cy.get('[data-testid=delete-user-modal] [data-testid=delete-cognito-domain-checkbox] input[type=checkbox]').click(); // check delete domain
@@ -112,9 +112,9 @@ describe("AWS autofill delete", () => {
 
     // user
     cy.get('[data-testid=users-table] table > tbody > tr:first-child > td input[type=radio]').click(); // select first user
-    cy.get('[data-testid=users-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click() // delete user
+    cy.get('[data-testid=users-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click(); // delete user
     cy.get('[data-testid=delete-user-modal]:not([class*=awsui_hidden]) button[data-testid=confirm]').should('not.be.disabled');
-    cy.get('[data-testid=delete-user-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click(); 
+    cy.get('[data-testid=delete-user-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click();
 
     // group
     cy.get('[class*=awsui_tabs-header] a[role=tab][data-testid=groups]').click(); // tab groups
@@ -125,8 +125,8 @@ describe("AWS autofill delete", () => {
 
     // idp
     cy.get('[class*=awsui_tabs-header] a[role=tab][data-testid=sign-in]').click(); // tab sign-in experience
-    cy.get('[role=tabpanel][id*=sign-in-panel] table > tbody > tr:first-child input[type=radio]').click() // select first idp
-    cy.get('[role=tabpanel][id*=sign-in-panel] [data-testid=identity-providers-table-header] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click() // delete button
+    cy.get('[role=tabpanel][id*=sign-in-panel] table > tbody > tr:first-child input[type=radio]').click(); // select first idp
+    cy.get('[role=tabpanel][id*=sign-in-panel] [data-testid=identity-providers-table-header] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click(); // delete button
     cy.get('[data-testid=confirm-delete-modal]:not([class*=awsui_hidden]) button[data-testid=confirm]').should('not.be.disabled');
     cy.get('[data-testid=confirm-delete-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click();
 
@@ -139,14 +139,14 @@ describe("AWS autofill delete", () => {
 
     // app client
     cy.get('[data-testid=app-client-table] table > tbody > tr:first-child input[type=radio]').click(); // select first app client
-    cy.get('[data-testid=app-client-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click() // delete
+    cy.get('[data-testid=app-client-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click(); // delete
     cy.get('[data-testid=confirm-delete-modal]:not([class*=awsui_hidden]) button[data-testid=confirm]').should('not.be.disabled');
     cy.get('[data-testid=confirm-delete-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click();
 
     // lambda trigger
     cy.get('[class*=awsui_tabs-header] a[role=tab][data-testid=properties]').click(); // tab user poll properties
-    cy.get('[data-testid=lambda-triggers-table] table > tbody > tr:first-child input[type=radio]').click() // select first lambda trigger
-    cy.get('[data-testid=lambda-triggers-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click() // delete
+    cy.get('[data-testid=lambda-triggers-table] table > tbody > tr:first-child input[type=radio]').click(); // select first lambda trigger
+    cy.get('[data-testid=lambda-triggers-table] [class*=awsui_actions] [class*=awsui_child]:nth-child(2) button[type=submit]').click(); // delete
     cy.get('[data-testid=confirm-delete-lambda-trigger-modal]:not([class*=awsui_hidden]) button[data-testid=confirm]').should('not.be.disabled');
     cy.get('[data-testid=confirm-delete-lambda-trigger-modal]:not([class*=awsui_hidden]) button[data-testid=cancel]').click();
 
@@ -166,22 +166,22 @@ describe("AWS autofill delete", () => {
     cy.get('button[data-test-selector=rule-action-modal-dismiss-button]').click();
 
     // global endpoint from list
-    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`)
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`);
     cy.get('#multiverse-table table > tbody > tr:first-child input[type=radio]').click(); // select first endpoint
     cy.get('#endpoints-table-delete button').click(); // delete
     cy.get('#endpoints-modal-confirm button').should('not.be.disabled');
     cy.get('#endpoints-modal-cancel button').click();
     // global endpoint from detail
-    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`)
-    cy.get('#multiverse-table table > tbody > tr:first-child > td:nth-child(2) a').click() // first endpoint link
+    cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/global-endpoints`);
+    cy.get('#multiverse-table table > tbody > tr:first-child > td:nth-child(2) a').click(); // first endpoint link
     cy.wait(1000); // wait because page changes and we need to get new button with same id from previous page
-    cy.get('#endpoints-table-delete button').click() // delete
+    cy.get('#endpoints-table-delete button').click(); // delete
     cy.get('#endpoints-modal-confirm button').should('not.be.disabled');
     cy.get('#endpoints-modal-cancel button').click();
 
     // archive from list
     cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/archives`);
-    cy.get('#archives-table table > tbody > tr:first-child input[type=radio]').click() // select first archive
+    cy.get('#archives-table table > tbody > tr:first-child input[type=radio]').click(); // select first archive
     cy.get('#archives-table #archives-table-delete button').click(); // delete
     cy.get('#archives-modal-confirm > button').should('not.be.disabled');
     cy.get('#archives-modal-cancel > button').click();
@@ -213,7 +213,7 @@ describe("AWS autofill delete", () => {
 
     // connections from detail
     cy.visit(`https://${region}.console.aws.amazon.com/events/home?region=${region}#/connections/autofill-delete-test-connection`);
-    cy.get('#connections-action-group-delete button').click() // delete
+    cy.get('#connections-action-group-delete button').click(); // delete
     cy.get('#connections-modal-confirm button').should('not.be.disabled');
     cy.get('#connections-modal-cancel button').click();
 
@@ -267,25 +267,25 @@ describe("AWS autofill delete", () => {
 
     // IAM
     // groups
-    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/groups')
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/groups');
     cy.get('.group-table table > tbody > tr:first-child input[type=checkbox]').click(); // select first group
     cy.get('.awsui-group-delete-button button').click(); // delete
     cy.get('#app #DELETE_GROUPS_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
     cy.get('#DELETE_GROUPS_MODAL [data-cy=cancel-modal] button').click();
     // users
-    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/users')
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/users');
     cy.get('#users-list table > tbody > tr:first-child input[type=checkbox]').click(); // select first user
     cy.get('.awsui-user-delete-button button').click(); // delete
     cy.get('#app #DELETE_USERS_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
     cy.get('#DELETE_USERS_MODAL [data-cy=cancel-modal] button').click();
     // roles
-    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/roles')
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/roles');
     cy.get('#roles-list table > tbody > tr:first-child input[type=checkbox]').click(); // select first role
     cy.get('.awsui-role-delete-button button').click(); // delete
     cy.get('#app #DELETE_ROLE_MODAL input[placeholder]').invoke('val').should('have.length.greaterThan', 0); // check input not empty because button is not disabled
     cy.get('#DELETE_ROLE_MODAL [data-cy=cancel-modal] button').click();
     // policies
-    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/policies')
+    cy.visit('https://us-east-1.console.aws.amazon.com/iamv2/home#/policies');
     cy.get('#policies-list-view-table table > tbody > tr:first-child input[type=radio]').click(); // select first policy
     cy.get('awsui-button-dropdown#POLICY_LIST_ACTIONS').click(); // action dropdown
     cy.get('awsui-button-dropdown#POLICY_LIST_ACTIONS li[data-testid=delete]').click(); // delete
@@ -296,7 +296,7 @@ describe("AWS autofill delete", () => {
     // Lambda
     cy.visit(`https://${region}.console.aws.amazon.com/lambda/home?region=${region}#/functions`);
     cy.get('#lambda-listFunctions table > tbody > tr:first-child input[type=checkbox]').click(); // select first function
-    cy.get('#lambda-listFunctions [class*=awsui_actions] [class*=awsui_button-dropdown] button').click() // action dropdown
+    cy.get('#lambda-listFunctions [class*=awsui_actions] [class*=awsui_button-dropdown] button').click(); // action dropdown
     cy.get('#lambda-listFunctions [class*=awsui_actions] [class*=awsui_button-dropdown] li[data-testid=delete]').click(); // delete
     cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:last-child button').should('not.be.disabled');
     cy.get('#function-list-delete-modal [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
@@ -315,7 +315,7 @@ describe("AWS autofill delete", () => {
     cy.get('[data-testid=buckets-table] table tbody tr:has(td a.bucket-name[href*=autofill-delete-test-stack-bucket]) input[type=radio]').click(); // select the bucket
     cy.get('[data-testid=buckets-table] awsui-button[data-analytics=emptyButton] button').click(); // empty bucket
     cy.wait(2000); // wait when changing page
-    cy.get('.empty-bucket awsui-alert').should('be.visible') // ensure page is loaded before next assertion
+    cy.get('.empty-bucket awsui-alert').should('be.visible'); // ensure page is loaded before next assertion
     cy.get('.empty-bucket-actions__submit button').should('not.be.disabled');
     cy.get('.empty-bucket-actions__cancel button').click();
     // delete bucket
@@ -338,7 +338,7 @@ describe("AWS autofill delete", () => {
     // SNS topic
     cy.visit(`https://${region}.console.aws.amazon.com/sns/v3/home?region=${region}#/topics`);
     cy.get('main table tbody > tr:first-child input[type=radio]').click(); // select first topic
-    cy.get('main .awsui-table-header [class*=awsui-util-action-stripe-group] div:nth-child(2) button').click() // delete
+    cy.get('main .awsui-table-header [class*=awsui-util-action-stripe-group] div:nth-child(2) button').click(); // delete
     cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:nth-child(2) button').should('not.be.disabled');
     cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
 
