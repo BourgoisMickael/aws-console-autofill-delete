@@ -7,7 +7,6 @@
     "default_icon": "logo.png",
     "default_title": "AWS console autofill delete"
   },
-  "permissions": ["webRequest"],
   "host_permissions": ["https://*.console.aws.amazon.com/*"],
   "content_scripts": [
     {
@@ -16,7 +15,6 @@
       "run_at": "document_idle"
     }
   ],
-  "background": { "service_worker": "./background.js" },
   "icons": {
     "16": "logo.png",
     "48": "logo.png",

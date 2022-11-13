@@ -235,16 +235,6 @@ if (isCypressTest()) {
     observer.observe(document, observerConfig);
 }
 
-/*
-chrome.runtime.onMessage.addListener(function messageListener(request, _sender, sendResponse) {
-    const service = getService()
-
-    console.debug('onMessage', request, service)
-    debouncedQueryFill(service, document);
-    sendResponse(1)
-})
-*/
-
 /**
  * Originally inspired by  David Walsh (https://davidwalsh.name/javascript-debounce-function)
  * Returns a function, that, as long as it continues to be invoked, will not be triggered.
