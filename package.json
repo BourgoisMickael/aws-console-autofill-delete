@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Extension to autofill delete confirmation on aws console",
   "scripts": {
-    "test": "cypress run --browser chrome --headed --no-exit --spec cypress/e2e/aws.cy.js"
+    "test": "cypress run --browser chrome --headed --no-exit --spec cypress/e2e/aws.cy.js",
+    "test:open": "cypress open --browser chrome --e2e"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,15 @@
   },
   "homepage": "https://github.com/BourgoisMickael/aws-console-autofill-delete#readme",
   "devDependencies": {
-    "cypress": "^10.11.0"
+    "cypress": "^10.11.0",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^2.7.1"
   }
 }
