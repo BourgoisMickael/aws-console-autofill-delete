@@ -7,7 +7,6 @@
     "default_icon": "logo.png",
     "default_title": "AWS console autofill delete"
   },
-  "host_permissions": ["https://*.console.aws.amazon.com/*"],
   "content_scripts": [
     {
       "matches": ["https://*.console.aws.amazon.com/*"],
