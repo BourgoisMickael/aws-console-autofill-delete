@@ -315,6 +315,7 @@ describe("AWS autofill delete", () => {
     cy.get('[data-testid=buckets-table] table tbody tr:has(td a.bucket-name[href*=autofill-delete-test-stack-bucket]) input[type=radio]').click(); // select the bucket
     cy.get('[data-testid=buckets-table] awsui-button[data-analytics=emptyButton] button').click(); // empty bucket
     cy.wait(2000); // wait when changing page
+    cy.get('.empty-bucket awsui-alert').should('be.visible') // ensure page is loaded before next assertion
     cy.get('.empty-bucket-actions__submit button').should('not.be.disabled');
     cy.get('.empty-bucket-actions__cancel button').click();
     // delete bucket
@@ -340,6 +341,19 @@ describe("AWS autofill delete", () => {
     cy.get('main .awsui-table-header [class*=awsui-util-action-stripe-group] div:nth-child(2) button').click() // delete
     cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:nth-child(2) button').should('not.be.disabled');
     cy.get('body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_footer] [class*=awsui_child]:first-child button').click();
+
+    // SQS
+    cy.visit(`https://${region}.console.aws.amazon.com/sqs/v2/home?region=${region}#/queues`);
+    cy.get('#queues table > tbody > tr:first-child input[type=radio]').click(); // select first queue
+    // delete
+    cy.get('#queues .awsui-table-header #button-stripe #delete-queue-button button').click(); // delete
+    cy.get('#delete-queue-modal-delete button').should('not.be.disabled');
+    cy.get('#delete-queue-modal-cancel button').click();
+    // purge
+    cy.get('#queues .awsui-table-header #button-stripe awsui-button-dropdown button').click(); // actions dropdown
+    cy.get('#queues .awsui-table-header #button-stripe awsui-button-dropdown li[data-testid=purgeQueue]').click(); // purge
+    cy.get('#purge-queue-modal-delete button').should('not.be.disabled');
+    cy.get('#purge-queue-modal-cancel button').click();
 
     // Can't test VPC
   });
