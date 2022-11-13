@@ -201,7 +201,7 @@ const observerConfig = {
   subtree: true,
   childList: true,
   attributes: true,
-  characterData: true,
+  characterData: false,
 };
 
 const iframes = {

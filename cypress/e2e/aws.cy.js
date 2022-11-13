@@ -1,6 +1,6 @@
 describe('AWS autofill delete', () => {
   it('run', () => {
-    cy.viewport(1144, 693);
+    cy.viewport(1280, 800);
     const baseDomain = Cypress.env('baseDomain');
     const username = Cypress.env('username');
     const password = Cypress.env('password');
@@ -316,6 +316,7 @@ describe('AWS autofill delete', () => {
     cy.get('[data-testid=buckets-table] awsui-button[data-analytics=emptyButton] button').click(); // empty bucket
     cy.wait(2000); // wait when changing page
     cy.get('.empty-bucket awsui-alert').should('be.visible'); // ensure page is loaded before next assertion
+    cy.wait(2000); // wait again as this takes some time during test
     cy.get('.empty-bucket-actions__submit button').should('not.be.disabled');
     cy.get('.empty-bucket-actions__cancel button').click();
     // delete bucket
