@@ -1,4 +1,29 @@
-const { autofill, debounce, getDocument, getLocation, getService, isCypressTest, quotedWordRegex } = require('./utils');
+const isCypressTest = () => window.location.href.endsWith('__/#/specs/runner?file=cypress/e2e/aws.cy.js');
+
+/** Get url during cypress testing */
+const getCypressUrl = () =>
+  // With cypress open
+  document.querySelector('input[data-cy=aut-url-input]')?.value ||
+  // With cypress run
+  document.querySelector('div[data-cy=aut-url]')?.innerText;
+
+/** Extracts service name from url */
+const getService = () =>
+  isCypressTest()
+    ? getCypressUrl()?.split?.('/')?.[3]?.toUpperCase?.()
+    : window.location.pathname.split?.('/')?.[1]?.toUpperCase?.();
+
+const getLocation = () => (isCypressTest() ? getCypressUrl() : window.location.href);
+const getDocument = () => (isCypressTest() ? document.querySelector('iframe.aut-iframe')?.contentDocument : document);
+
+/**
+ * Catch quotes in any language
+ * @see https://en.wikipedia.org/wiki/Quotation_mark#Unicode_code_point_table
+ */
+// eslint-disable-next-line no-misleading-character-class
+const quoteRegex = /["'«»‘’‚‛“”„‟‹›⹂⌜⌝❛❜❝❞🙶🙷🙸⠴⠦「」『』〝〞〟﹁﹂﹃﹄＂＇｢｣《》〈〉]/;
+/** Quoted word in any language */
+const quotedWordRegex = new RegExp(`${quoteRegex.source}\\s*(.*?)\\s*${quoteRegex.source}`);
 
 const queries = {
   APIGATEWAY: [
@@ -220,4 +245,34 @@ if (isCypressTest()) {
   cypressObserver.observe(document, { attributes: true, childList: true, subtree: true });
 } else {
   observer.observe(document, observerConfig);
+}
+
+/** Autofills an input element */
+function autofill(elem, data) {
+  if (!elem) return;
+  if (elem.value === data) return;
+  // let lastFocus = document.activeElement; // nothing to do with previous focus
+  elem.focus();
+  elem.select();
+  elem.value = data;
+  elem.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/**
+ * Originally inspired by  David Walsh (https://davidwalsh.name/javascript-debounce-function)
+ * Returns a function, that, as long as it continues to be invoked, will not be triggered.
+ * The function will be called after it stops being called for `wait` milliseconds.
+ */
+function debounce(func, wait) {
+  let timeout;
+
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
