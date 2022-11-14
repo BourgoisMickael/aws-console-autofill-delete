@@ -202,6 +202,28 @@ const queries = {
     },
   ],
   LAMBDA: ['#function-list-delete-modal input[placeholder]'],
+  ROUTE53: [
+    {
+      condition: () => getLocation()?.includes('route53/v2/hostedzones#CidrCollections'),
+      querySelector: '[data-testid=delete-modal-input] input[placeholder]',
+      text: (doc) =>
+        // CIDR locations
+        (
+          doc.querySelector(
+            '[data-testid=cidr-blocks-table] table > tbody > tr[class*=awsui_row-selected] > td:nth-child(2)'
+          ) ||
+          // CIDR collections
+          doc.querySelector(
+            '[data-testid=cidr-collections-table] table > tbody > tr[class*=awsui_row-selected] > td:nth-child(2)'
+          )
+        )?.innerText,
+    },
+    {
+      // Hosted zone
+      condition: () => /route53\/v2\/hostedzones(?:#?$|#ListRecordSets)/.test(getLocation()),
+      querySelector: '[data-testid=delete-modal-input] input[placeholder]',
+    },
+  ],
   S3: [
     '#app .delete-objects__form .delete-objects__input__input input[placeholder]', // delete objects
     '#app .empty-bucket .empty-bucket-actions .empty-bucket-actions__input input[placeholder]', // empty bucket
