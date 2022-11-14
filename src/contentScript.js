@@ -67,6 +67,13 @@ const queries = {
       querySelector: 'body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]',
     },
   ],
+  CLOUDWATCH: [
+    {
+      // Metrics Streams
+      condition: () => getLocation()?.includes('metric-streams'),
+      querySelector: 'body[class*=awsui-modal-open] #delete-stream-confirmation + awsui-input input[placeholder]',
+    },
+  ],
   COGNITO: [
     // OLD INTERFACE
     {
@@ -219,7 +226,7 @@ async function queryFill(service, doc) {
         const value = q.text
           ? q.text(doc)
           : (!elem.disabled && elem.placeholder) || (service === 'COGNITO' ? 'delete' : undefined);
-        // console.debug("Found", elem, elem.disabled, value);
+        // console.debug('Found', elem, elem.disabled, value);
         if (value) autofill(elem, value);
       }
     } else {
@@ -243,6 +250,7 @@ const observerConfig = {
 };
 
 const iframes = {
+  CLOUDWATCH: 'iframe#microConsole-MetricStreams',
   VPC: 'iframe#networking-react-frame',
 };
 
