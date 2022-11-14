@@ -125,6 +125,7 @@ const queries = {
       },
     },
   ],
+  FIREHOSE: ['body[class*=awsui_modal-open] [data-analytics=deleteConfirm] input[placeholder]'],
   IAM: [
     // Users > Security credentials > Access keys
     '.delete-access-key-section input[placeholder]',
@@ -147,6 +148,43 @@ const queries = {
     '#app #DELETE_ROLE_MODAL input[placeholder]',
     '#app #DELETE_POLICY_MODAL input[placeholder]',
     '#app #DELETE_IDP_MODAL input[placeholder]',
+  ],
+  KINESIS: ['body[class*=awsui_modal-open] [data-analytics=deleteStreamModal] input[placeholder]'],
+  KINESISANALYTICS: [
+    // SQL applications (legacy)
+    {
+      // Application
+      condition: () => /#\/sql\/.*?\/details|#\/list\/sql-applications-legacy/.test(getLocation()),
+      querySelector: 'body[class*=awsui_modal-open] #DeleteApplicationModalInput input[placeholder]',
+    },
+    {
+      // Destinations
+      condition: () => getLocation()?.includes('sql') && getLocation()?.includes('/details/destinations'),
+      querySelector: 'body[class*=awsui_modal-open] #sqlDisconnectResourceModalInput input[placeholder]',
+    },
+    // Studio notebooks and streaming applications
+    {
+      // notebook configuration: supported connectors
+      condition: () => /#\/notebook\/.*?\/details\/configuration/.test(getLocation()),
+      querySelector: 'body[class*=awsui_modal-open] #RemoveCustomArtifactModalInput input[placeholder]',
+    },
+    {
+      // notebook and application
+      condition: () =>
+        /#\/(?:notebook|application)\/.*?\/details|#\/list\/(?:notebooks|applications)|#\/applications\/dashboard/.test(
+          getLocation()
+        ),
+      querySelector: 'body[class*=awsui_modal-open] #DeleteApplicationModalInput input[placeholder]',
+    },
+
+    {
+      // force stop notebook and application
+      condition: () =>
+        /#\/(?:notebook|application)\/.*?\/details|#\/list\/(?:notebooks|applications)|#\/applications\/dashboard/.test(
+          getLocation()
+        ),
+      querySelector: 'body[class*=awsui_modal-open] #ForceStopApplicationModalInput input[placeholder]',
+    },
   ],
   LAMBDA: ['#function-list-delete-modal input[placeholder]'],
   S3: [
