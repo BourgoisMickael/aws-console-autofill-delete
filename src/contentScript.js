@@ -26,6 +26,14 @@ const quoteRegex = /["'«»‘’‚‛“”„‟‹›⹂⌜⌝❛❜❝❞�
 const quotedWordRegex = new RegExp(`${quoteRegex.source}\\s*(.*?)\\s*${quoteRegex.source}`);
 
 const queries = {
+  ACM: [
+    '#deleteTextInput input[placeholder]',
+    {
+      condition: () => getLocation()?.endsWith('#/certificates/list'),
+      querySelector:
+        'list-certificates [role=dialog]:not([class*=awsui-modal-hidden]) .awsui-modal-body input[placeholder]',
+    },
+  ],
   APIGATEWAY: [
     {
       function: function apigateway(doc) {
