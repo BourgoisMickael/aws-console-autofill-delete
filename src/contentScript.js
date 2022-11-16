@@ -117,6 +117,22 @@ const queries = {
       },
     },
   ],
+  EC2: [
+    // Instances > Launch Template
+    '[data-id=delete-launch-template-modal] [data-id=friction-input] input[placeholder]',
+    // Network & Security > Placement Groups | Key Pairs | Flow logs (network interfaces)
+    '[data-id=confirmation-modal] [data-id=confirmation-modal-input] input[placeholder]',
+    // Load balancer > Listener & certificates for SNI
+    {
+      condition: () => getLocation()?.includes('#ELBListenerV2'),
+      querySelector: '#elb_polaris ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder',
+    },
+    // Auto Scaling Groups
+    {
+      condition: () => getLocation()?.includes('#AutoScalingGroups'),
+      querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder',
+    },
+  ],
   EVENTS: [
     // rule from list
     '#rules-section .awsui-modal-body input[placeholder]',
@@ -280,8 +296,20 @@ const observerConfig = {
 };
 
 const iframes = {
-  CLOUDWATCH: 'iframe#microConsole-MetricStreams',
-  VPC: 'iframe#networking-react-frame',
+  CLOUDWATCH: ['iframe#microConsole-MetricStreams'],
+  EC2: [
+    // Launch template
+    'iframe#instance-lx-react-frame',
+    // Network & Security > Placement group | Key Pairs
+    'iframe#compute-react-frame',
+    // Network & Security > Network Interface
+    'iframe#nic-react-frame',
+    // Load Balancing
+    'iframe#elb_polaris-frame',
+    // Auto Scaling
+    'iframe#asg-frame',
+  ],
+  VPC: ['iframe#networking-react-frame'],
 };
 
 const observer = new window.MutationObserver(function (_mutations, _observer) {
@@ -291,20 +319,22 @@ const observer = new window.MutationObserver(function (_mutations, _observer) {
   if (!service || !doc) return;
   if (!iframes[service]) return debouncedQueryFill(service, doc);
 
-  let iframe;
-  try {
-    iframe = document.querySelector(iframes[service]);
-  } catch (e) {
-    // catch security exception like cors
-    console.warn('Caught error', e);
-    return;
-  }
+  for (const iframeSelector of iframes[service]) {
+    let iframe;
+    try {
+      iframe = document.querySelector(iframeSelector);
+    } catch (e) {
+      // catch security exception like cors
+      console.warn('Caught error', e);
+      return;
+    }
 
-  if (iframe && iframe.contentDocument) {
-    const iframeObserver = new window.MutationObserver(function () {
-      debouncedQueryFill(service, iframe.contentDocument);
-    });
-    iframeObserver.observe(iframe.contentDocument, observerConfig);
+    if (iframe && iframe.contentDocument) {
+      const iframeObserver = new window.MutationObserver(function () {
+        debouncedQueryFill(service, iframe.contentDocument);
+      });
+      iframeObserver.observe(iframe.contentDocument, observerConfig);
+    }
   }
 });
 
