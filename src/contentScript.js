@@ -237,6 +237,17 @@ const queries = {
       querySelector: 'body[class*=awsui_modal-open] #ForceStopApplicationModalInput input[placeholder]',
     },
   ],
+  KMS: [
+    // delete alias
+    {
+      querySelector: 'body.awsui-modal-open awsui-modal[data-integ=delete-alias-modal] input[type=text]',
+      text: (doc) =>
+        quotedWordRegex.exec(
+          doc.querySelector('body.awsui-modal-open awsui-modal[data-integ=delete-alias-modal] awsui-form-field label')
+            ?.innerText
+        )?.[1],
+    },
+  ],
   LAMBDA: ['#function-list-delete-modal input[placeholder]'],
   ROUTE53: [
     {
