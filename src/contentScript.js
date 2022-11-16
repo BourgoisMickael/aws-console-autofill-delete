@@ -133,6 +133,26 @@ const queries = {
       querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder',
     },
   ],
+  ELASTICBEANSTALK: [
+    {
+      condition: () => getLocation()?.includes('application'),
+      querySelector:
+        'body.awsui-modal-open awsui-modal[ng-controller=DeleteApplicationModalController] input[name=applicationName]',
+      text: (doc) =>
+        doc.querySelector(
+          'body.awsui-modal-open awsui-modal[ng-controller=DeleteApplicationModalController] .modal-body p > strong'
+        )?.innerText,
+    },
+    {
+      condition: () => getLocation()?.includes('environment'),
+      querySelector:
+        'body.awsui-modal-open awsui-modal[ng-controller=TerminateEnvironmentModalController] input[name=environmentName]',
+      text: (doc) =>
+        doc.querySelector(
+          'body.awsui-modal-open awsui-modal[ng-controller=TerminateEnvironmentModalController] .awsui-modal-body p > strong'
+        )?.innerText,
+    },
+  ],
   EVENTS: [
     // rule from list
     '#rules-section .awsui-modal-body input[placeholder]',
