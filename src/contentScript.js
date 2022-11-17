@@ -120,17 +120,24 @@ const queries = {
   EC2: [
     // Instances > Launch Template
     '[data-id=delete-launch-template-modal] [data-id=friction-input] input[placeholder]',
-    // Network & Security > Placement Groups | Key Pairs | Flow logs (network interfaces)
+    // Elastic Block Store & Network & Security > Security Groups
+    {
+      // confirmation appears only if there are multiple items selected
+      condition: () => getLocation()?.includes('SecurityGroups'),
+      querySelector: '[data-id=confirmation-modal] [data-id=confirmation-modal-input] input[type=text]',
+      text: (doc) => doc.querySelector('#security-groups-react [data-id=confirmation-modal] label i')?.innerText,
+    },
+    // Network & Security > Placement Groups | Key Pairs | Flow logs (network interfaces) | Elastic Block Store (multiple items selected)
     '[data-id=confirmation-modal] [data-id=confirmation-modal-input] input[placeholder]',
     // Load balancer > Listener & certificates for SNI
     {
       condition: () => getLocation()?.includes('#ELBListenerV2'),
-      querySelector: '#elb_polaris ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder',
+      querySelector: '#elb_polaris ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder]',
     },
     // Auto Scaling Groups
     {
       condition: () => getLocation()?.includes('#AutoScalingGroups'),
-      querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder',
+      querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder]',
     },
   ],
   ELASTICBEANSTALK: [
@@ -331,8 +338,12 @@ const iframes = {
   EC2: [
     // Launch template
     'iframe#instance-lx-react-frame',
+    // Elastic Block Store > Volumes
+    'iframe#storage-react-frame',
     // Network & Security > Placement group | Key Pairs
     'iframe#compute-react-frame',
+    // Network & Security > Security Groups
+    'iframe#security-groups-react-frame',
     // Network & Security > Network Interface
     'iframe#nic-react-frame',
     // Load Balancing
