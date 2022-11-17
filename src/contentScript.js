@@ -140,6 +140,39 @@ const queries = {
       querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder]',
     },
   ],
+  EFS: [
+    // Replication
+    {
+      condition: () => getLocation()?.includes('tabId=replication'),
+      querySelector: '.awsui-tabs-content-active[id$=replication-panel] awsui-modal input[type=text]',
+      text: (doc) =>
+        quotedWordRegex.exec(
+          doc.querySelector('.awsui-tabs-content-active[id$=replication-panel] awsui-modal label')?.innerText
+        )?.[1],
+    },
+    // FileSystem from list page
+    {
+      condition: () => getLocation()?.endsWith('#/file-systems'),
+      querySelector: '[data-analytics=fileSystems] awsui-modal input[type=text]',
+      text: (doc) => {
+        // Get fsId column index as projection can change column indexes
+        const headRow = doc.querySelector('[data-analytics=fileSystems] table > thead > tr:nth-child(1)');
+        if (!headRow || !headRow.children || !headRow.children.length) return;
+        const fsIdIndex = Array.from(headRow.children).findIndex(
+          (cell) => cell.getAttribute('data-awsui-column-id') === 'FileSystemId'
+        );
+        return doc.querySelector(
+          `[data-analytics=fileSystems] table > tbody > tr.awsui-table-row-selected > td:nth-child(${fsIdIndex + 1})`
+        )?.innerText;
+      },
+    },
+    // FileSystem from detail page
+    {
+      condition: () => /#\/file-systems\/((?:\w|-)+)\/?$/.test(getLocation()),
+      querySelector: '[data-analytics="page_fileSystemDetails"] awsui-modal input[type=text]',
+      text: () => /#\/file-systems\/((?:\w|-)+)\/?$/.exec(getLocation())?.[1],
+    },
+  ],
   ELASTICBEANSTALK: [
     {
       condition: () => getLocation()?.includes('application'),
