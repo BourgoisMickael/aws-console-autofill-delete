@@ -17,6 +17,7 @@ Tired of filling the deletion confirmation modal to delete a resource on AWS con
 
 The automatic filling is implemented for more than **25** services, including:
 
+- Access Analyzer
 - ACM
 - Api Gateway
 - Athena

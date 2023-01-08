@@ -26,6 +26,12 @@ const quoteRegex = /["'«»‘’‚‛“”„‟‹›⹂⌜⌝❛❜❝❞�
 const quotedWordRegex = new RegExp(`${quoteRegex.source}\\s*(.*?)\\s*${quoteRegex.source}`);
 
 const queries = {
+  'ACCESS-ANALYZER': [
+    {
+      condition: () => getLocation()?.endsWith('/analyzers') || getLocation()?.endsWith('/rules'),
+      querySelector: '[role=dialog]:not([class*=awsui-modal-hidden]) .awsui-modal-body input[placeholder]',
+    },
+  ],
   ACM: [
     '#deleteTextInput input[placeholder]',
     {
