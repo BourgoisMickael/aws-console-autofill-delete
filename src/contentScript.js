@@ -108,6 +108,7 @@ const queries = {
         '[role=dialog]:not([class*=awsui_hidden]) [data-testid=additional-confirmation-section] input[type=text]',
     },
   ],
+  CONFIG: ['[data-testid=delete-modal] [role=dialog]:not([class*=awsui-modal-hidden]) input[type=text]'],
   DOCDB: [
     {
       function: function docdb(doc) {
