@@ -24,6 +24,7 @@ The automatic filling is implemented for more than **25** services, including:
 - DynamoDB
 - CloudWatch
 - Cognito
+- Config
 - DocumentDB
 - EC2
 - EFS
