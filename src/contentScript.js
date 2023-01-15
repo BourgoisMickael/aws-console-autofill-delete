@@ -55,6 +55,7 @@ const queries = {
       querySelector: 'body[class*=awsui-modal-open] .awsui-modal-body input[type=text][placeholder]',
     },
   ],
+  APPFLOW: ['[role=dialog] #delete-input input[placeholder]'],
   ATHENA: ['div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]'],
   DYNAMODBV2: [
     {

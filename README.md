@@ -20,6 +20,7 @@ The automatic filling is implemented for more than **25** services, including:
 - Access Analyzer
 - ACM
 - Api Gateway
+- AppFlow
 - Athena
 - DynamoDB
 - CloudWatch
