@@ -331,7 +331,9 @@ const queries = {
     // delete topic and phone number
     {
       condition: () => /topic|mobile\/text-messaging/.test(getLocation()),
-      querySelector: 'body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]',
+      querySelector:
+        // Use :has(strong) to filter out Confirm subscription modal that has no strong text
+        'body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_content]:has(strong) input[placeholder]',
     },
   ],
   SQS: ['#app #purge-queue-modal input[placeholder]', '#app #delete-queue-modal input[placeholder]'],
