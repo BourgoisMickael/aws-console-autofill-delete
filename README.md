@@ -37,6 +37,7 @@ The automatic filling is implemented for more than **25** services, including:
 - Lambda
 - Route53
 - S3
+- Service Catalog
 - Single Sign-On
 - SNS
 - SQS

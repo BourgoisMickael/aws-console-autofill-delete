@@ -326,6 +326,12 @@ const queries = {
     '#app .access-points-list awsui-modal.two-factor-confirmation-modal input[placeholder]', // delete access point
     '#app awsui-modal .global-confirmation-modal__two-factor input[placeholder]', // delete object lambda and multi region access point
   ],
+  SERVICECATALOG: [
+    // Terminate provisioned product
+    '[data-test-id=terminate-confirm-text-modal] [data-test-id=terminate-pp-modal-input] input[placeholder]',
+    // Product (version) | Portfolio > (constraints) | TagOptions library | Service action | AppRegistry (Applications | Attribute groups)
+    '[data-test-id=confirm-text-modal] input[placeholder]',
+  ],
   SINGLESIGNON: ['#delete-group-modal input[placeholder]'],
   SNS: [
     // delete topic and phone number
