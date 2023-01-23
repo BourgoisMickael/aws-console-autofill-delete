@@ -344,6 +344,16 @@ const queries = {
   ],
   SQS: ['#app #purge-queue-modal input[placeholder]', '#app #delete-queue-modal input[placeholder]'],
   VPC: ['body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]'],
+  QLDB: [
+    // ledger
+    '#ledger-list-view-delete-modal-input input[placeholder]',
+    // table
+    '#ledger-detail-view-drop-modal-input input[placeholder]',
+    // index
+    '#ledger-detail-view-drop-index-modal-input input[placeholder]',
+    // stream
+    '#cancel-stream-modal-input input[placeholder]',
+  ],
   WAFV2: ['.awsui-modal-body .awsui-form-field .awsui-form-field-control input[placeholder]'],
 };
 

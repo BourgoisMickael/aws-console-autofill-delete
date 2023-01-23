@@ -42,6 +42,7 @@ The automatic filling is implemented for more than **25** services, including:
 - SNS
 - SQS
 - VPC
+- QLDB
 - WAF
 
 More services are to come. You can open an issue or contribute if you'd like a service to be implemented.
