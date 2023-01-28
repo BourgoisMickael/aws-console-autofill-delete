@@ -57,29 +57,6 @@ const queries = {
   ],
   APPFLOW: ['[role=dialog] #delete-input input[placeholder]'],
   ATHENA: ['div[data-testid=confirm-with-friction-modal] div[data-testid=modal-friction-word] input[placeholder]'],
-  DYNAMODBV2: [
-    {
-      // delete table
-      querySelector:
-        'body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]',
-    },
-    {
-      // delete backup
-      condition: () => getLocation()?.endsWith('#list-backups'),
-      querySelector:
-        'body[class*=awsui_modal-open] [data-testid=delete-backup-modal] [data-testid=input-delete-with-friction] input[placeholder]',
-    },
-    {
-      // delete index
-      condition: () => getLocation()?.includes('tab=indexes'),
-      querySelector: 'body[class*=awsui_modal-open] [role=dialog] input[placeholder]',
-    },
-    {
-      // delete replica (global table)
-      condition: () => getLocation()?.includes('tab=globalTables'),
-      querySelector: 'body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]',
-    },
-  ],
   CLOUDWATCH: [
     {
       // Metrics Streams
@@ -121,6 +98,29 @@ const queries = {
           instanceElem && !instanceElem.disabled && autofill(instanceElem, instanceText.innerText);
         else clusterElem && !clusterElem.disabled && autofill(clusterElem, clusterText.innerText);
       },
+    },
+  ],
+  DYNAMODBV2: [
+    {
+      // delete table
+      querySelector:
+        'body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]',
+    },
+    {
+      // delete backup
+      condition: () => getLocation()?.endsWith('#list-backups'),
+      querySelector:
+        'body[class*=awsui_modal-open] [data-testid=delete-backup-modal] [data-testid=input-delete-with-friction] input[placeholder]',
+    },
+    {
+      // delete index
+      condition: () => getLocation()?.includes('tab=indexes'),
+      querySelector: 'body[class*=awsui_modal-open] [role=dialog] input[placeholder]',
+    },
+    {
+      // delete replica (global table)
+      condition: () => getLocation()?.includes('tab=globalTables'),
+      querySelector: 'body[class*=awsui_modal-open] [class*=awsui_dialog] input[placeholder]',
     },
   ],
   EC2: [
