@@ -22,11 +22,11 @@ The automatic filling is implemented for more than **25** services, including:
 - Api Gateway
 - AppFlow
 - Athena
-- DynamoDB
 - CloudWatch
 - Cognito
 - Config
 - DocumentDB
+- DynamoDB
 - EC2
 - EFS
 - Elastic Beanstalk
