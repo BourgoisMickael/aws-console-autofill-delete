@@ -60,7 +60,6 @@ const queries = {
   DYNAMODBV2: [
     {
       // delete table
-      condition: () => getLocation()?.endsWith('#tables'),
       querySelector:
         'body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]',
     },
@@ -73,8 +72,7 @@ const queries = {
     {
       // delete index
       condition: () => getLocation()?.includes('tab=indexes'),
-      querySelector:
-        'body[class*=awsui-modal-open] [data-testid=polaris-app-layout] .awsui-modal-body input[placeholder]',
+      querySelector: 'body[class*=awsui_modal-open] [role=dialog] input[placeholder]',
     },
     {
       // delete replica (global table)
