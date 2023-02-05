@@ -204,7 +204,7 @@ const queries = {
     '#rules-section .awsui-modal-body input[placeholder]',
     // rule from detail
     '[data-test-selector=rule-action-modal] [data-test-selector=rule-action-modal-input] input[placeholder]',
-    // global endpoint / archive / api destionations / connections
+    // global endpoint / archive / api destinations / connections
     {
       querySelector:
         'input[name=endpoints-modal-delete-input], input[name=archives-modal-delete-input], input[name=apiDestinations-modal-delete-input], input[name=connections-modal-input], input[name=schemas-delete-registry]',
@@ -220,6 +220,11 @@ const queries = {
         const schema = /events\/home.*?#\/registries\/.*?\/schemas\/(.+?)(?:\/version\/\d+)?$/.exec(getLocation())?.[1];
         return schema && decodeURIComponent(schema);
       },
+    },
+    // pipes
+    {
+      condition: () => /pipe/.test(getLocation()),
+      querySelector: '[data-test-selector=unite-modal-consent-input] input[placeholder]',
     },
   ],
   FIREHOSE: ['body[class*=awsui_modal-open] [data-analytics=deleteConfirm] input[placeholder]'],
@@ -323,6 +328,14 @@ const queries = {
     '#app .delete-bucket-actions__form .delete-bucket-actions__input input[placeholder]', // delete bucket
     '#app .access-points-list awsui-modal.two-factor-confirmation-modal input[placeholder]', // delete access point
     '#app awsui-modal .global-confirmation-modal__two-factor input[placeholder]', // delete object lambda and multi region access point
+  ],
+  // EventBridge Scheduler
+  SCHEDULER: [
+    // schedule groups
+    {
+      condition: () => /schedule-groups/.test(getLocation()),
+      querySelector: '[role=dialog][data-analytics=delete-modal] input[placeholder]',
+    },
   ],
   SERVICECATALOG: [
     // Terminate provisioned product
