@@ -250,6 +250,19 @@ const queries = {
     '#app #DELETE_ROLE_MODAL input[placeholder]',
     '#app #DELETE_POLICY_MODAL input[placeholder]',
     '#app #DELETE_IDP_MODAL input[placeholder]',
+    // delete user from details page
+    {
+      // This one is very specific to not impact other modals on the same page
+      condition: () => /iamv2\/home#\/users\/details\/.*?\?section=/.test(getLocation()),
+      querySelector:
+        'body[class*=awsui_modal-open] [role=dialog] [class*=awsui_content] > [class*=awsui_root] > [class*=awsui_child]:last-child input[placeholder]',
+    },
+    // Access key
+    '[data-testid=access-key-delete-modal-input] input[placeholder]',
+    // HTTPS Git credentials for AWS CodeCommit | Credentials for Amazon Keyspaces (for Apache Cassandra)
+    '[role=dialog]:not([class*=awsui_hidden]) [data-testid=delete-credentials-modal-input] input[placeholder]',
+    // Signing certificates (X.509)
+    '[data-testid=x509-delete-modal-input] input[placeholder]',
   ],
   KINESIS: ['body[class*=awsui_modal-open] [data-analytics=deleteStreamModal] input[placeholder]'],
   KINESISANALYTICS: [
