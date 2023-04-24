@@ -104,11 +104,11 @@ const queries = {
     {
       // delete table
       querySelector:
-        'body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input] input[placeholder]',
+        'body[class*=awsui_modal-open] [data-testid=delete-table-modal] div[data-testid=delete-table-input-confirm] input[placeholder]',
     },
     {
       // delete backup
-      condition: () => getLocation()?.endsWith('#list-backups'),
+      condition: () => getLocation()?.endsWith('#list-backups') || getLocation()?.includes('tab=backups'),
       querySelector:
         'body[class*=awsui_modal-open] [data-testid=delete-backup-modal] [data-testid=input-delete-with-friction] input[placeholder]',
     },
