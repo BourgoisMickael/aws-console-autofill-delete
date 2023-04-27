@@ -1,7 +1,7 @@
 {
   "name": "AWS console autofill delete",
   "description": "Automatically fills the confirmation message to delete a resource in AWS",
-  "version": "2.6",
+  "version": "2.7",
   "manifest_version": 3,
   "action": {
     "default_icon": "logo.png",

@@ -47,6 +47,8 @@ The automatic filling is implemented for more than **25** services, including:
 
 More services are to come. You can open an issue or contribute if you'd like a service to be implemented.
 
+Sometimes AWS updates their interfaces and the extension might stop working for some services. If this is the case, let me know so I can update the extension.
+
 <br/>
 
 # Description

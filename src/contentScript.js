@@ -201,7 +201,7 @@ const queries = {
   ],
   EVENTS: [
     // rule from list
-    '#rules-section .awsui-modal-body input[placeholder]',
+    '[data-test-selector=list-rules-modal-consent-input] input[placeholder]',
     // rule from detail
     '[data-test-selector=rule-action-modal] [data-test-selector=rule-action-modal-input] input[placeholder]',
     // global endpoint / archive / api destinations / connections
