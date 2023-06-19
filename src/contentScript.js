@@ -366,7 +366,7 @@ const queries = {
         'body[class*=awsui_modal-open] [class*=awsui_dialog] [class*=awsui_content]:has(strong) input[placeholder]',
     },
   ],
-  SQS: ['#app #purge-queue-modal input[placeholder]', '#app #delete-queue-modal input[placeholder]'],
+  SQS: ['#purge-queue-modal input[placeholder]', '#delete-queue-modal input[placeholder]'],
   VPC: ['body[class*=awsui-modal-open] [data-id=confirmation-modal-input] input[placeholder]'],
   QLDB: [
     // ledger
