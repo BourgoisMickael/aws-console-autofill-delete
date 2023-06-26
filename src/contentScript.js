@@ -146,6 +146,10 @@ const queries = {
       querySelector: '#asg ~ div [role=dialog]:not([class*=awsui_hidden]) input[placeholder]',
     },
   ],
+  ECR: [
+    'div[data-testid="deleteRepositoryModal"] input[placeholder]', // delete repository
+    'div[data-testid="deleteImageModal"] input[placeholder]', // delete image
+  ],
   EFS: [
     // Replication
     {
