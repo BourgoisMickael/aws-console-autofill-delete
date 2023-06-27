@@ -7,8 +7,8 @@
     "test:chrome": "cypress run --browser chrome --headed --no-exit --spec cypress/e2e/aws.cy.js",
     "test:firefox": "cypress run --browser firefox --headed --no-exit --spec cypress/e2e/aws.cy.js",
     "lint": "eslint .",
-    "build:chrome": "mkdir -p build/chrome/ && cp -r src/ assets/logo.png build/chrome/ && cp manifests/v3.json build/chrome/manifest.json && zip -j build/chrome.zip build/chrome/*",
-    "build:firefox": "mkdir -p build/firefox/ && cp -r src/ assets/logo.png build/firefox/ && cp manifests/v2.json build/firefox/manifest.json && zip -j build/firefox.zip build/firefox/*",
+    "build:chrome": "mkdir -p build/chrome/ && cp -r src/* assets/logo.png build/chrome/ && cp manifests/v3.json build/chrome/manifest.json && zip -j build/chrome.zip build/chrome/*",
+    "build:firefox": "mkdir -p build/firefox/ && cp -r src/* assets/logo.png build/firefox/ && cp manifests/v2.json build/firefox/manifest.json && zip -j build/firefox.zip build/firefox/*",
     "build": "npm run build:chrome && npm run build:firefox"
   },
   "repository": {
