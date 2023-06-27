@@ -28,6 +28,7 @@ The automatic filling is implemented for more than **25** services, including:
 - DocumentDB
 - DynamoDB
 - EC2
+- ECR
 - EFS
 - Elastic Beanstalk
 - EventBridge
