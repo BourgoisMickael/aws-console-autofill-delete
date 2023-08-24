@@ -28,8 +28,13 @@ const quotedWordRegex = new RegExp(`${quoteRegex.source}\\s*(.*?)\\s*${quoteRege
 const queries = {
   'ACCESS-ANALYZER': [
     {
-      condition: () => getLocation()?.endsWith('/analyzers') || getLocation()?.endsWith('/rules'),
-      querySelector: '[role=dialog]:not([class*=awsui-modal-hidden]) .awsui-modal-body input[placeholder]',
+      condition: () =>
+        getLocation()?.endsWith('/analyzers') ||
+        getLocation()?.includes('/analyzer/') ||
+        getLocation()?.endsWith('/rules'),
+      querySelector:
+        // Complex selector to not catch filter options dropdown in rules
+        '[role=dialog][aria-modal=true][aria-labelledby$=-header]:not([class*=awsui_hidden]) input[placeholder]',
     },
   ],
   ACM: [
@@ -250,17 +255,10 @@ const queries = {
   ],
   IAMV2: [
     '#app #DELETE_GROUPS_MODAL input[placeholder]',
-    '#app #DELETE_USERS_MODAL input[placeholder]',
+    '[data-analytics="deleteUserModal"] input[placeholder]',
     '#app #DELETE_ROLE_MODAL input[placeholder]',
     '#app #DELETE_POLICY_MODAL input[placeholder]',
     '#app #DELETE_IDP_MODAL input[placeholder]',
-    // delete user from details page
-    {
-      // This one is very specific to not impact other modals on the same page
-      condition: () => /iamv2\/home#\/users\/details\/.*?\?section=/.test(getLocation()),
-      querySelector:
-        'body[class*=awsui_modal-open] [role=dialog] [class*=awsui_content] > [class*=awsui_root] > [class*=awsui_child]:last-child input[placeholder]',
-    },
     // Access key
     '[data-testid=access-key-delete-modal-input] input[placeholder]',
     // HTTPS Git credentials for AWS CodeCommit | Credentials for Amazon Keyspaces (for Apache Cassandra)
